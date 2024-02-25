@@ -1,0 +1,11 @@
+exercise squat
+exercise deadlift
+exercise bench
+exercise press
+exercise dips
+exercise chin-up
+
+progression squat linear 100kg +2.5kg
+progression deadlift linear 100kg +2.5kg
+progression bench linear 70kg +2.5kg
+progression press linear 50kg +2.5kg
