@@ -483,25 +483,25 @@ chest supported rows 3*5*60
 biceps curl 27,5*10+3332
 
 2013/12/03
-high bar 4,3,2*107,5
+high bar 4,3,2*107.5
 press 3,2,2*50
 chin up 3,3,3,3
 face pulls 2*10*50
 
 2013/12/05
 squat 2*5*85
-bench press 3,4,3*77,5
+bench press 3,4,3*77.5
 deadlift 3*140
 biceps curl 27,5*10+33332
 
 2013/12/07
-squat 3*5*107,5
+squat 3*5*107.5
 press 5,3,2*50
 chin up 3,3,3
 
 2013/12/13
 hb squat 5,4,3*110
-bench 5,4,3*77,5
+bench 5,4,3*77.5
 biceps curl 8*30+31
 
 2013/12/18
@@ -568,7 +568,7 @@ bench press 7,5,6*70
 
 2014/02/12
 squat 5*60,70,80,90,100 3*110
-bench press 7,4,4,4,4*72,5
+bench press 7,4,4,4,4*72.5
 
 2014/02/14
 deadlift 5*60,80,90,100,110,120,130,145
@@ -604,7 +604,7 @@ benchpress 10,8,7,6,4*65
 
 2014/03/03
 lowbar squat 5*60,80,90,100,110,115
-press 8,6,4,4,4*42,5
+press 8,6,4,4,4*42.5
 facepulls 10*20,30,30
 
 2014/03/06
@@ -705,7 +705,7 @@ lying triceps extension 3*10*15
 
 2014/04/27
 squat 4*4*110
-bench 6,4,4,4,3*77,5
+bench 6,4,4,4,3*77.5
 chin up 3,2,2,2,1
 facepulls 3*10*30
 
@@ -750,7 +750,7 @@ rows 10*30,40
 squat 3*5*85
 press 3*5*40
 chest supported rows 3*8*50
-biceps curl 3*10*22,5
+biceps curl 3*10*22.5
 
 2014/07/23
 squat 3*5*90
@@ -761,20 +761,20 @@ biceps curl 3*10*25
 
 2014/07/28
 squat 3*5*95
-press 3*5*42,5
+press 3*5*42.5
 chest supported rows 3*10*60
 bc 10,10,8*60
 
 2014/07/30
 squat 3*5*100
-bench presses 3*5*67,5
+bench presses 3*5*67.5
 deadlift 1*5*120
 
 2014/08/01
-squat 3*5*102,5
-press 3*5*47,5
+squat 3*5*102.5
+press 3*5*47.5
 chest supported rows 3*8*70
-biceps curl 10,7,7*27,5
+biceps curl 10,7,7*27.5
 
 2014/08/05
 squat 3*5*105
@@ -783,18 +783,18 @@ deadlift 5*130
 biceps curl 10*27,5+3,3,3,3,3,2
 
 2014/08/06
-squat 3*5*107,5
-press 3*5*47,5
+squat 3*5*107.5
+press 3*5*47.5
 chest supported rows 3*5*75
 biceps curl 10*30+3,3,2
 
 2014/08/08
 squat 3*5*110
-bench 3*5*72,5
+bench 3*5*72.5
 deadlift 5*135
 
 2014/08/11
-squat 3*5*112,5
+squat 3*5*112.5
 press 5,5,3*50
 chest supported rows 3*8*75
 
@@ -811,13 +811,13 @@ chin up 3,2,2,2,1
 facepulls 2*8*35
 
 2014/08/20
-bench 3*5*77,5
+bench 3*5*77.5
 deadlift 1*45
 biceps curl 10*30+3,3,3,2
 facepulls 2*8*40
 
 2014/08/22
-squat 3*5*117,5
+squat 3*5*117.5
 press 3*5*51
 chin up 3,3,2,2
 
@@ -828,7 +828,7 @@ squat 4*2*110
 
 2014/08/28
 deadlift 5*150
-press 3*5*52,5
+press 3*5*52.5
 biceps curl 8*32,5+222221
 
 2014/08/31
@@ -837,8 +837,8 @@ bench 3*5*80
 chin up 4,3,1
 
 2014/09/02
-squat 3*5*122,5
-press 4,3,3*53,5
+squat 3*5*122.5
+press 4,3,3*53.5
 pull-up 4,1
 facepulls 2*8*40
 
@@ -848,24 +848,24 @@ deadlift 5*155
 
 2014/09/08
 squat 3*5*125
-press 4,4,3*53,5
+press 4,4,3*53.5
 
 2014/09/10
-bench 5,5,4*82,5
+bench 5,5,4*82.5
 deadlift 5*160
 
 2014/09/12
-squat 3*5*127,5
-press 3*5*53,5
+squat 3*5*127.5
+press 3*5*53.5
 
 2014/09/16
-bench 6*6*67,5
+bench 6*6*67.5
 chin up 3,3,3,3
 facepulls 3*5*45
 
 2014/09/18
-benches 7*5*72,5
-facepulls 3*8*35 
+benches 7*5*72.5
+facepulls 3*8*35
 
 2014/09/21
 bench 10*3*80
@@ -896,17 +896,17 @@ biceps curl 5*8
 squat 3*5*75
 press 3*5*35
 chest supported rows 3*5*60
-biceps curl 3*8*22,5
+biceps curl 3*8*22.5
 
 2016/07/21
-squat 3*5*77,5
+squat 3*5*77.5
 bench press 3*5*50
 deadlift 5*90
-biceps curl 4*8*22,5
+biceps curl 4*8*22.5
 
 2016/07/24
 squat 5*80
-press 3*5*37,5
+press 3*5*37.5
 chin up 5*1
 
 2016/07/26
@@ -916,7 +916,7 @@ deadlift 5*100
 biceps curl 3*8*25
 
 2016/07/28
-squat 3*5*78,5
+squat 3*5*78.5
 press 3*5*36
 powerclean 3*3*50
 chin up 6*1
@@ -925,7 +925,7 @@ chin up 6*1
 squat 3*5*80
 bench press 3*5*60
 deadlift 3*5*110
-biceps curl 3*8*27,5
+biceps curl 3*8*27.5
 
 2016/08/02
 squat 3*5*87.5

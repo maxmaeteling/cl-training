@@ -1,5 +1,5 @@
 (defpackage cl-training.parsers
-  (:use :cl :maxpc :maxpc.digit :maxpc.char :parse-number)
+  (:use :cl :maxpc :maxpc.digit :maxpc.char :parse-number :cl-training.classes)
   (:export :=trainings))
 (in-package :cl-training.parsers)
 
@@ -20,7 +20,7 @@
    #'parse-number:parse-number))
 
 (defun =comma-separated (fn)
-    (=destructure (f l)
+  (=destructure (f l)
 				(=list (funcall fn)
 					   (%any (=destructure (_ n) (=list (?eq #\,)
 														(funcall fn))
@@ -77,7 +77,7 @@
 					   (%some (=transform  (=list (=set)
 												  (%maybe (?eq #\space)))
 										   #'first)))
-	(list exercise reps)))
+	(make-exercise exercise reps)))
 
 (defun =training ()
   (=destructure (d _ e)
@@ -87,7 +87,7 @@
 											(=list (=exercise)
 												   (%maybe (?newline)))
 								tr)))
-	(list d e)))
+	(make-training d e)))
 
 (defun =trainings ()
   (=list (%some  (=destructure (tr _)
