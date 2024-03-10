@@ -35,25 +35,37 @@
 
 (defun =set-only-reps ()
   (=transform (=comma-separated-ints)
-			  #'(lambda (sets) (list :reps sets))))
+			  #'(lambda (reps) (make-exercise-set reps))))
+
+(defun =set-reps-weights ()
+  (=destructure (reps weights)
+				(=list (=comma-separated-ints)
+					   (=destructure (_ weights)
+									 (=list (?eq #\*)
+											(=comma-separated-floats))
+						 weights))
+	(normalize-reps-weights reps weights)))
 
 (defun =set-sets-reps-weights ()
   (=destructure (sets rw)
 				(=list (=transform (=list (=comma-separated-ints)
 										  (?eq #\*))
 								   #'first)
-					   (=transform (=set-reps-weights)
-								   #'rest))
-	(cons :sets-reps-weights (cons sets rw))))
+					   (=set-reps-weights))
+	(multiply-sets sets rw)))
 
-(defun =set-reps-weights ()
-  (=destructure (sets reps)
-				(=list (=comma-separated-ints)
-					   (=destructure (_ reps)
-									 (=list (?eq #\*)
-											(=comma-separated-floats))
-						 reps))
-	(list :reps-weights sets reps)))
+(defun normalize-reps-weights (reps weights)
+  (mapcar #'(lambda (set)
+			  (destructuring-bind (reps weight) set
+				(make-set-weight reps weight)))
+		   (cartesian-product reps weights)))
+
+(defun cartesian-product (l1 l2)
+  (loop
+	for x in l1
+	append (loop
+			  for y in l2
+			  collect (list x y))))
 
 (defun =set ()
   (%or (=set-sets-reps-weights)
