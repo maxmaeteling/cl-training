@@ -105,23 +105,22 @@
 								tr)))
 	(make-training d e)))
 
+(defun =separated (fn-x fn-sep)
+  (%some (=transform (=list (funcall fn-x)
+							(%any (funcall fn-sep)))
+					 #'first)))
+
 (defun =trainings ()
-  (=list (%some (=transform (=list (=training)
-								   (%any (?newline)))
-							#'car))))
+  (=list (=separated #'=training #'?newline)))
 
 (defun =exercise-alias-lists ()
-  (=list (%some (=transform (=list (=exercise-aliases)
-								   (%some (?newline)))
-							#'first))))
+  (=list (=separated #'=exercise-aliases #'?newline)))
 
 (defun ?space ()
   (?eq #\ ))
 
 (defun =exercise-aliases ()
-  (%some (=transform (=list (=quoted-string)
-							(%any (?space)))
-					 #'first)))
+  (=separated #'=quoted-string #'?space))
 
 (defun ?quote ()
   (?eq #\"))
