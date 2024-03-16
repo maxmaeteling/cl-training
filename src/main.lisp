@@ -2,12 +2,29 @@
   (:use :cl :cl-training.parsers :maxpc :cl-training.classes))
 (in-package :cl-training)
 
+(declaim (optimize (debug 3)))
+
 (defparameter *log-path* #p"/home/max/projects/lisp/training/data/training.log")
 (defparameter *program-path* #p"/home/max/projects/lisp/training/data/program.log")
+(defparameter *alias-path* #p"/home/max/projects/lisp/training/data/aliases")
 
 (defun load-parse-training (&optional (path *log-path*))
   (with-open-file (s path)
 	(first (parse s (=trainings)))))
+
+(defun load-parse-aliases (&optional (path *alias-path*))
+  (with-open-file (s path)
+	(first (parse s (=exercise-alias-lists)))))
+
+(defun build-alias-hashtable (&optional (alias-list (load-parse-aliases)))
+  (loop
+	for aliases in alias-list
+	for word = (car aliases)
+	with alias-hash = (make-hash-table :test #'equalp)
+	do (mapcar #'(lambda (alias)
+			   (setf (gethash alias alias-hash) word))
+		   aliases)
+	finally (return alias-hash)))
 
 (defun interactive-log-training ())
 (defun interactive-log-exercise ())

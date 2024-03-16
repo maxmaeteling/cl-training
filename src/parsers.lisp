@@ -1,6 +1,10 @@
 (defpackage cl-training.parsers
   (:use :cl :maxpc :maxpc.digit :maxpc.char :parse-number :cl-training.classes)
-  (:export :=trainings))
+  (:export :=trainings
+		   :=exercise-alias-lists
+		   :=exercise-alias-list
+		   :=exercise-aliases
+		   :=quoted-string))
 (in-package :cl-training.parsers)
 
 (defun =int ()
@@ -102,37 +106,28 @@
 	(make-training d e)))
 
 (defun =trainings ()
-  (=list (%some (=destructure (tr _)
-							  (=list (=training)
-									 (%any (?newline)))
-				  tr))))
+  (=list (%some (=transform (=list (=training)
+								   (%any (?newline)))
+							#'car))))
 
 (defun =exercise-alias-lists ()
-  (=list (%some (=destructure (w _)
-							  (=list (=exercise-alias-list)
-									 (%any (?newline)))))))
-
-(defun =exercise-alias-list ()
-  (=destructure (x _ y)
-				(=list (=exercise-alias)
-					   (%any (?space))
-					   (=exercise-aliases))
-	(list x y)))
-
-(defun ?quotation-mark ()
-  (?satisfies #'(lambda (c) (char= c #\"))))
+  (=list (%some (=transform (=list (=exercise-aliases)
+								   (%some (?newline)))
+							#'first))))
 
 (defun ?space ()
-  (?satisfies #'(lambda (c) (char= c #\ ))))
-
-(defun =exercise-alias ()
-  (=destructure (_ w _)
-				(=list (?quotation-mark)
-					   (=word)
-					   (?quotation-mark))
-	w))
+  (?eq #\ ))
 
 (defun =exercise-aliases ()
-  (=list (%some (=destructure (w _)
-							  (=list (=exercise-alias)
-									 (%any (?space)))))))
+  (%some (=transform (=list (=quoted-string)
+							(%any (?space)))
+					 #'first)))
+
+(defun ?quote ()
+  (?eq #\"))
+
+(defun =quoted-string ()
+  (=transform (=list (?quote)
+					 (=subseq (%any (?not (?quote))) )
+					 (?quote))
+			  #'cadr))
