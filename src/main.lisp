@@ -24,6 +24,14 @@
 (defun filter-exercises (logbook name)
   (loop
 	for training in logbook
-	for exercise-names = (mapcar #'exercise-name (training-exercises training))
+	for exercise-names = (mapcar #'exercise-name
+								 (training-exercises training))
 	when (find name exercise-names :test #'string=) 
 	  collect training))
+
+(defun trainings-exercise-names (logbook)
+  (loop
+	for training in logbook
+	for exercise-names = (mapcar #'exercise-name
+								 (training-exercises training))
+	append exercise-names))
