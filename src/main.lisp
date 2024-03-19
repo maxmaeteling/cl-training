@@ -42,7 +42,6 @@
 	for training in log
 	do (loop
 		 for exercise in (training-exercises training)
-		 do (print (exercise-name exercise))
 		 do (setf (exercise-name exercise)
 				  (normalize-exercise-name (exercise-name exercise))))
 	finally (return log)))
