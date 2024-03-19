@@ -1,0 +1,4 @@
+* Todo
+** TODO Proper date data type/ library
+** TODO Structured (beautified/ tabularized) output
+** TODO Structured output in input format

@@ -8,6 +8,8 @@
 (defparameter *program-path* #p"/home/max/projects/lisp/training/data/program.log")
 (defparameter *alias-path* #p"/home/max/projects/lisp/training/data/aliases")
 
+(defparameter *alias-db* nil)
+
 (defun load-parse-training (&optional (path *log-path*))
   (with-open-file (s path)
 	(first (parse s (=trainings)))))
@@ -26,8 +28,24 @@
 		   aliases)
 	finally (return alias-hash)))
 
+(defun normalize-exercise-name (name &optional (db *alias-db*))
+  (gethash name db))
+
+(defun create-alias-db ()
+  (setf *alias-db* (build-alias-hashtable)))
+
 (defun interactive-log-training ())
 (defun interactive-log-exercise ())
+
+(defun normalize-exercise-names (log)
+  (loop
+	for training in log
+	do (loop
+		 for exercise in (training-exercises training)
+		 do (print (exercise-name exercise))
+		 do (setf (exercise-name exercise)
+				  (normalize-exercise-name (exercise-name exercise))))
+	finally (return log)))
 
 (defun 1rm (weight reps)
   "Calculate 1 repetition max based on weights anc reps according to Brzycki formula from https://en.wikipedia.org/wiki/One-repetition_maximum"
