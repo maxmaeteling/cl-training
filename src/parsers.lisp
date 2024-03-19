@@ -39,7 +39,7 @@
 
 (defun =set-only-reps ()
   (=transform (=comma-separated-ints)
-			  #'(lambda (reps) (make-exercise-set reps))))
+			  #'(lambda (reps) (list (make-exercise-set reps)))))
 
 (defun =set-reps-weights ()
   (=destructure (reps weights)
@@ -50,6 +50,12 @@
 						 weights))
 	(normalize-reps-weights reps weights)))
 
+(defun normalize-reps-weights (reps weights)
+  (mapcar #'(lambda (set)
+			  (destructuring-bind (reps weight) set
+				(make-set-weight reps weight)))
+		  (cartesian-product reps weights)))
+
 (defun =set-sets-reps-weights ()
   (=destructure (sets rw)
 				(=list (=transform (=list (=comma-separated-ints)
@@ -57,12 +63,6 @@
 								   #'first)
 					   (=set-reps-weights))
 	(multiply-sets sets rw)))
-
-(defun normalize-reps-weights (reps weights)
-  (mapcar #'(lambda (set)
-			  (destructuring-bind (reps weight) set
-				(make-set-weight reps weight)))
-		   (cartesian-product reps weights)))
 
 (defun cartesian-product (l1 l2)
   (loop
@@ -81,34 +81,30 @@
 					   (?satisfies (lambda (c)
 									 (member c '(#\- #\_ #\( #\)))))))))
 
+(defun =separated (fn-x fn-sep)
+  (%some (=transform (=list (funcall fn-x)
+							(%any (funcall fn-sep)))
+					 #'first)))
+
 (defun =exercise-name ()
   (=subseq (?seq (=word)
 				 (%any (?seq (%maybe (%some (?whitespace)))
 							 (=word))))))
 
 (defun =exercise ()
-  (=destructure (exercise _ reps)
+  (=destructure (exercise _ sets)
 				(=list (=exercise-name)
 					   (%some (?whitespace))
-					   (%some (=transform (=list (=set)
-												 (%maybe (?eq #\space)))
-										  #'first)))
-	(make-exercise exercise reps)))
+					   (=transform (=separated #'=set #'?space)
+								   #'(lambda (x) (reduce #'append x))) )
+	(make-exercise exercise sets)))
 
 (defun =training ()
   (=destructure (d _ e)
 				(=list (=date)
 					   (?newline)
-					   (%some (=destructure (tr _)
-											(=list (=exercise)
-												   (%maybe (?newline)))
-								tr)))
+					   (=separated #'=exercise #'?newline))
 	(make-training d e)))
-
-(defun =separated (fn-x fn-sep)
-  (%some (=transform (=list (funcall fn-x)
-							(%any (funcall fn-sep)))
-					 #'first)))
 
 (defun =trainings ()
   (=list (=separated #'=training #'?newline)))

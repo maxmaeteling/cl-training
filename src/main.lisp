@@ -1,5 +1,5 @@
 (defpackage cl-training
-  (:use :cl :cl-training.parsers :maxpc :cl-training.classes))
+  (:use :cl :cl-training.parsers :maxpc :cl-training.classes :cl-training.print))
 (in-package :cl-training)
 
 (declaim (optimize (debug 3)))

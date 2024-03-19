@@ -2,3 +2,5 @@
 ** TODO Proper date data type/ library
 ** TODO Structured (beautified/ tabularized) output
 ** TODO Structured output in input format
+** TODO Set combining/ exploding library
+** TODO Plotting (progress of exercises over time)
