@@ -69,3 +69,19 @@
 	for exercise-names = (mapcar #'exercise-name
 								 (training-exercises training))
 	append exercise-names))
+
+(defun exercise-1rm (exercise)
+  (reduce #'max
+		  (mapcar #'set-1rm
+				  (exercise-sets exercise))))
+
+(defmethod set-1rm ((set exercise-set))
+  (reduce #'max (set-reps set)))
+
+(defmethod set-1rm ((set set-weight))
+  (1rm (set-weight set)
+	   (set-reps set)))
+
+(defmethod set-1rm ((set multi-set-weight))
+  (1rm (set-weight set)
+	   (set-reps set)))

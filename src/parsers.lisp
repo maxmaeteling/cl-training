@@ -1,10 +1,6 @@
 (defpackage cl-training.parsers
   (:use :cl :maxpc :maxpc.digit :maxpc.char :parse-number :cl-training.classes)
-  (:export :=trainings
-		   :=exercise-alias-lists
-		   :=exercise-alias-list
-		   :=exercise-aliases
-		   :=quoted-string))
+  (:export :=trainings :=exercise-alias-lists :=exercise-alias-list :=exercise-aliases :=quoted-string))
 (in-package :cl-training.parsers)
 
 (defun =int ()
@@ -68,8 +64,8 @@
   (loop
 	for x in l1
 	append (loop
-			  for y in l2
-			  collect (list x y))))
+			 for y in l2
+			 collect (list x y))))
 
 (defun =set ()
   (%or (=set-sets-reps-weights)
