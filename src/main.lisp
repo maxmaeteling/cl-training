@@ -53,9 +53,7 @@
 (defun tonnage (sets reps weight)
   (* sets reps weight))
 
-;; (defun max-1rm (exercise))
-
-(defun filter-exercises (logbook name)
+(defun filter-training-by-exercises (logbook name)
   (loop
 	for training in logbook
 	for exercise-names = (mapcar #'exercise-name
@@ -85,3 +83,16 @@
 (defmethod set-1rm ((set multi-set-weight))
   (1rm (set-weight set)
 	   (set-reps set)))
+
+(defmethod set-tonnage ((set exercise-set))
+  (reduce #'+ (set-reps set)))
+
+(defmethod set-tonnage ((set set-weight))
+  (* (set-weight set)
+	 (set-reps set)))
+
+(defmethod set-tonnage ((set multi-set-weight))
+  (* (set-number set)
+	 (set-weight set)
+	 (set-reps set)))
+
