@@ -109,4 +109,3 @@
   (* (set-number set)
 	 (set-weight set)
 	 (set-reps set)))
-
