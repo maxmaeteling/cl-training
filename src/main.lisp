@@ -1,12 +1,16 @@
 (defpackage cl-training
-  (:use :cl :cl-training.parsers :maxpc :cl-training.classes :cl-training.print))
+  (:use :cl :cl-training.parsers :maxpc :cl-training.classes :cl-training.print :eazy-gnuplot))
 (in-package :cl-training)
 
 (declaim (optimize (debug 3)))
 
-(defparameter *log-path* #p"/home/max/projects/lisp/cl-training/data/training.log")
-(defparameter *program-path* #p"/home/max/projects/lisp/cl-training/data/program.log")
-(defparameter *alias-path* #p"/home/max/projects/lisp/cl-training/data/aliases")
+(defparameter *path* #p"/home/max/projects/lisp/cl-training/")
+
+(defparameter *log-path* (merge-pathnames #p"data/training.log" *path*))
+(defparameter *program-path*  (merge-pathnames #p"data/program.log" *path*))
+(defparameter *alias-path* (merge-pathnames #p"data/aliases/" *path*))
+
+(defparameter *images-path* (merge-pathnames #p"output/images/" *path*))
 
 (defparameter *alias-db* nil)
 
