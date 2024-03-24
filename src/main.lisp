@@ -4,9 +4,9 @@
 
 (declaim (optimize (debug 3)))
 
-(defparameter *log-path* #p"/home/max/projects/lisp/training/data/training.log")
-(defparameter *program-path* #p"/home/max/projects/lisp/training/data/program.log")
-(defparameter *alias-path* #p"/home/max/projects/lisp/training/data/aliases")
+(defparameter *log-path* #p"/home/max/projects/lisp/cl-training/data/training.log")
+(defparameter *program-path* #p"/home/max/projects/lisp/cl-training/data/program.log")
+(defparameter *alias-path* #p"/home/max/projects/lisp/cl-training/data/aliases")
 
 (defparameter *alias-db* nil)
 
