@@ -72,6 +72,16 @@
 								 (training-exercises training))
 	append exercise-names))
 
+(defun trainings-1rms (logbook)
+  (loop
+	for training in logbook
+	collect (training-1rm training)))
+
+(defun training-1rm (training)
+  (loop
+	for exercise in (training-exercises training)
+	collect (exercise-1rm exercise)))
+
 (defun exercise-1rm (exercise)
   (reduce #'max
 		  (mapcar #'set-1rm
