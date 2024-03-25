@@ -78,25 +78,28 @@
 	collect (training-1rm training)))
 
 (defun training-1rm (training)
-  (loop
-	for exercise in (training-exercises training)
-	collect (exercise-1rm exercise)))
+  (make-training (training-date training)
+				 (loop
+				   for exercise in (training-exercises training)
+				   collect (exercise-1rm exercise))))
 
 (defun exercise-1rm (exercise)
-  (reduce #'max
-		  (mapcar #'set-1rm
-				  (exercise-sets exercise))))
+  (make-exercise (exercise-name exercise)
+				 (mapcar #'set-1rm
+						 (exercise-sets exercise))))
 
 (defmethod set-1rm ((set exercise-set))
-  (reduce #'max (set-reps set)))
+  (make-exercise-set (reduce #'max (set-reps set))))
 
 (defmethod set-1rm ((set set-weight))
-  (1rm (set-weight set)
-	   (set-reps set)))
+  (make-set-weight 1
+				   (float (1rm (set-weight set)
+							   (set-reps set)))))
 
 (defmethod set-1rm ((set multi-set-weight))
-  (1rm (set-weight set)
-	   (set-reps set)))
+    (make-set-weight 1
+					 (float (1rm (set-weight set)
+								 (set-reps set)))))
 
 (defmethod set-tonnage ((set exercise-set))
   (reduce #'+ (set-reps set)))
