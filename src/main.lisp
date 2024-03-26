@@ -65,6 +65,17 @@
 	when (find name exercise-names :test #'string=) 
 	  collect training))
 
+(defun filter-trainings-exercise-names (logbook name)
+  (loop
+	for training in logbook
+	for exercises-filtered = (loop
+							   for exercise in (training-exercises training)
+							   when (string= name (exercise-name exercise))
+								 collect exercise)
+	when exercises-filtered
+	  collect (make-training (training-date training)
+							 exercises-filtered)))
+
 (defun trainings-exercise-names (logbook)
   (loop
 	for training in logbook
@@ -83,10 +94,38 @@
 				   for exercise in (training-exercises training)
 				   collect (exercise-1rm exercise))))
 
+(defmethod set>= ((set-1 set-weight) (set-2 set-weight))
+  "Compare by weight"
+  (if (>= (set-weight set-1)
+		  (set-weight set-2))
+	  set-1
+	  set-2))
+
+(defmethod set>= ((set-1 exercise-set) (set-2 exercise-set))
+  "Compare by reps"
+  (if (>= (set-reps set-1)
+		  (set-reps set-2))
+	  set-1
+	  set-2))
+
+(defun logbook-date-weight (logbook)
+  (loop
+	for training in logbook
+	append (loop
+			 for exercise in (training-exercises training)
+			 collect (list (training-date training)
+						   (set-max-effort (car (exercise-sets exercise)))))))
+
+(defmethod set-max-effort ((set exercise-set))
+  (set-reps set))
+
+(defmethod set-max-effort ((set set-weight))
+  (set-weight set)) 
+
 (defun exercise-1rm (exercise)
   (make-exercise (exercise-name exercise)
-				 (mapcar #'set-1rm
-						 (exercise-sets exercise))))
+				 (list (reduce #'set>= (mapcar #'set-1rm
+												 (exercise-sets exercise))))))
 
 (defmethod set-1rm ((set exercise-set))
   (make-exercise-set (reduce #'max (set-reps set))))
