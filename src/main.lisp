@@ -57,23 +57,17 @@
 (defun tonnage (sets reps weight)
   (* sets reps weight))
 
-(defun filter-training-by-exercises (logbook name)
+(defun filter-log (log &key (training #'(lambda (x) (declare (ignore x)) t))
+					 (exercise #'(lambda (x) (declare (ignore x)) t)))
   (loop
-	for training in logbook
-	for exercise-names = (mapcar #'exercise-name
-								 (training-exercises training))
-	when (find name exercise-names :test #'string=) 
-	  collect training))
-
-(defun filter-trainings-exercise-names (logbook name)
-  (loop
-	for training in logbook
+	for tr in log
 	for exercises-filtered = (loop
-							   for exercise in (training-exercises training)
-							   when (string= name (exercise-name exercise))
-								 collect exercise)
-	when exercises-filtered
-	  collect (make-training (training-date training)
+							   for ex in (training-exercises tr)
+							   when (funcall exercise ex)
+								 collect ex)
+	when (and (funcall training tr)
+			  exercises-filtered)
+	  collect (make-training (training-date tr)
 							 exercises-filtered)))
 
 (defun trainings-exercise-names (logbook)
@@ -84,9 +78,7 @@
 	append exercise-names))
 
 (defun trainings-1rms (logbook)
-  (loop
-	for training in logbook
-	collect (training-1rm training)))
+  (mapcar #'training-1rm logbook))
 
 (defun training-1rm (training)
   (make-training (training-date training)
@@ -155,12 +147,13 @@
 (defun date-gnuplot (s date)
   (format s "~{~2,'0d~^-~}" date))
 
-(defun plot-time/value (output data)
+(defun plot-time/value (output title data)
   (with-plots (s :debug t)
 	(gp-setup :terminal '(png :size "1200,900") :output output)
 	(gp :set :xdata 'time)
     (gp :set :timefmt "%Y-%m-%d")
 	(gp :set :format '(x "%m/%y"))
+	(gp :set :title title)
 	(plot
 	 (lambda ()
 	   (loop
@@ -174,12 +167,11 @@
 (defun output-image-path (name)
   (merge-pathnames name *images-path*))
 
-(defun exercise-plot-time/value (exercise file)
+(defun exercise-plot-time/value (exercise title file)
   (plot-time/value
    (output-image-path file)
+   title
    (logbook-date-weight
-	(filter-trainings-exercise-names
-	 (trainings-1rms
-	  (normalize-exercise-names
-	   (load-parse-training)))
-	 exercise))))
+	(filter-log (trainings-1rms (normalize-exercise-names (load-parse-training)))
+				:exercise #'(lambda (e) (string= (exercise-name e)
+												 exercise))))))
