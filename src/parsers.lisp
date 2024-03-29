@@ -68,9 +68,17 @@
 			 collect (list x y))))
 
 (defun =set ()
-  (%or (=set-sets-reps-weights)
-	   (=set-reps-weights)
-	   (=set-only-reps)))
+  (=transform
+   (=list
+	(%or (=set-sets-reps-weights)
+		 (=set-reps-weights)
+		 (=set-only-reps))
+	(%maybe (=supplemental)))
+   #'first))
+
+(defun =supplemental ()
+  (?seq (?eq #\+)
+		(=set-only-reps)))
 
 (defun =word ()
   (=subseq (%some (%or (?satisfies 'alpha-char-p)

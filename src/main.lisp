@@ -157,11 +157,10 @@
 
 (defun plot-time/value (output data)
   (with-plots (s :debug t)
-	(gp-setup :terminal '(png :size "1200,900")  :output output)
+	(gp-setup :terminal '(png :size "1200,900") :output output)
 	(gp :set :xdata 'time)
     (gp :set :timefmt "%Y-%m-%d")
 	(gp :set :format '(x "%m/%y"))
-	(gp :set :yrange '(40 150))
 	(plot
 	 (lambda ()
 	   (loop
@@ -175,12 +174,12 @@
 (defun output-image-path (name)
   (merge-pathnames name *images-path*))
 
-(defun test-plot-time/value ()
+(defun exercise-plot-time/value (exercise file)
   (plot-time/value
-   (output-image-path "test.png")
+   (output-image-path file)
    (logbook-date-weight
 	(filter-trainings-exercise-names
 	 (trainings-1rms
 	  (normalize-exercise-names
 	   (load-parse-training)))
-	 "low bar squat"))))
+	 exercise))))
