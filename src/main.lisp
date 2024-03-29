@@ -151,3 +151,33 @@
   (* (set-number set)
 	 (set-weight set)
 	 (set-reps set)))
+
+(defun date-gnuplot (s date)
+  (format s "~{~2,'0d~^-~}" date))
+
+(defun plot-time/value (output data)
+  (with-plots (s :debug t)
+	(gp-setup :terminal '(pngcairo :size "1200,800") :output output)
+	(gp :set :xdata 'time)
+    (gp :set :timefmt "%Y-%m-%d")
+	(gp :set :format '(x "%m/%y"))
+	(gp :set :yrange '(0 200))
+	(plot
+	 (lambda ()
+	   (loop
+		 for (date value) in data
+		 for date-gp = (date-gnuplot nil date)
+		 do (format s "~&~a ~a" date-gp value)))
+	 :using '(1 2)
+	 :with '(:points :pt 7))
+	output))
+
+(defun test-plot-time/value ()
+  (plot-time/value
+   (merge-pathnames "test.png" *images-path*)
+   (logbook-date-weight
+	(filter-trainings-exercise-names
+	 (trainings-1rms
+	  (normalize-exercise-names
+	   (load-parse-training)))
+	 "low bar squat"))))
