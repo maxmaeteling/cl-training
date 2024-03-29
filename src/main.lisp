@@ -132,17 +132,31 @@
 					 (float (1rm (set-weight set)
 								 (set-reps set)))))
 
+(defun trainings-tonnage (log)
+  (mapcar #'training-tonnage log))
+
+(defun training-tonnage (training)
+  (make-training (training-date training)
+				 (mapcar #'exercise-tonnage (training-exercises training))))
+
+(defun exercise-tonnage (exercise)
+  (let ((sets (exercise-sets exercise)))
+	(make-exercise (exercise-name exercise)
+				   (make-set-weight
+					(reduce #'+ (mapcar #'set-reps sets))
+					(reduce #'+ (mapcar #'set-weight sets))))))
+
 (defmethod set-tonnage ((set exercise-set))
-  (reduce #'+ (set-reps set)))
+  (make-set-weight (reduce #'+ (set-reps set)) 1))
 
 (defmethod set-tonnage ((set set-weight))
-  (* (set-weight set)
-	 (set-reps set)))
+  (make-set-weight 1 (* (set-weight set)
+						(set-reps set))))
 
 (defmethod set-tonnage ((set multi-set-weight))
-  (* (set-number set)
-	 (set-weight set)
-	 (set-reps set)))
+  (make-set-weight 1 (* (set-number set)
+						(set-weight set)
+						(set-reps set))))
 
 (defun date-gnuplot (s date)
   (format s "~{~2,'0d~^-~}" date))
@@ -167,11 +181,20 @@
 (defun output-image-path (name)
   (merge-pathnames name *images-path*))
 
-(defun exercise-plot-time/value (exercise title file)
+(defun exercise-plot-time/1rm (exercise title file)
   (plot-time/value
    (output-image-path file)
    title
    (logbook-date-weight
 	(filter-log (trainings-1rms (normalize-exercise-names (load-parse-training)))
+				:exercise #'(lambda (e) (string= (exercise-name e)
+												 exercise))))))
+
+(defun exercise-plot-time/tonnage (exercise title file)
+  (plot-time/value
+   (output-image-path file)
+   title
+   (logbook-date-weight
+	(filter-log (trainings-tonnage (normalize-exercise-names (load-parse-training)))
 				:exercise #'(lambda (e) (string= (exercise-name e)
 												 exercise))))))
