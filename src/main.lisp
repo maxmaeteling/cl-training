@@ -156,8 +156,8 @@
   (format s "~{~2,'0d~^-~}" date))
 
 (defun plot-time/value (output data)
-  (with-plots (s :debug t)
-	(gp-setup :terminal '(pngcairo :size "1200,800") :output output)
+  (with-plots (s :debug nil)
+	(gp-setup :terminal '(pngcairo :size "1200,1000") :output output)
 	(gp :set :xdata 'time)
     (gp :set :timefmt "%Y-%m-%d")
 	(gp :set :format '(x "%m/%y"))
@@ -172,9 +172,12 @@
 	 :with '(:points :pt 7))
 	output))
 
+(defun output-image-path (name)
+  (merge-pathnames name *images-path*))
+
 (defun test-plot-time/value ()
   (plot-time/value
-   (merge-pathnames "test.png" *images-path*)
+   (output-image-path "test.png")
    (logbook-date-weight
 	(filter-trainings-exercise-names
 	 (trainings-1rms
