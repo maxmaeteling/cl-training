@@ -2,10 +2,13 @@
   :version "0.1.0"
   :author "Max Mäteling"
   :license ""
-  :depends-on ()
+  :depends-on ("maxpc" "parse-number" "eazy-gnuplot")
   :components ((:module "src"
                 :components
-                ((:file "main"))))
+                ((:file "classes")
+				 (:file "parsers")
+				 (:file "print")
+				 (:file "main"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-training/tests"))))
 
