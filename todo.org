@@ -1,6 +1,8 @@
 * Todo
-** TODO Proper date data type/ library
+** DONE Proper date data type/ library
+CLOSED: [2024-03-30 Sa 13:10]
 ** TODO Structured (beautified/ tabularized) output
 ** TODO Structured output in input format
 ** TODO Set combining/ exploding library
-** TODO Plotting (progress of exercises over time)
+** DONE Plotting (progress of exercises over time)
+CLOSED: [2024-03-30 Sa 11:35]

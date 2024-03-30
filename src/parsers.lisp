@@ -1,5 +1,5 @@
 (defpackage cl-training.parsers
-  (:use :cl :maxpc :maxpc.digit :maxpc.char :parse-number :cl-training.classes)
+  (:use :cl :maxpc :maxpc.digit :maxpc.char :parse-number :cl-training.classes :local-time)
   (:export :=trainings :=exercise-alias-lists :=exercise-alias-list :=exercise-aliases :=quoted-string))
 (in-package :cl-training.parsers)
 
@@ -9,7 +9,10 @@
 (defun =date ()
   (=destructure (y _ m _ d)
 				(=list (=int) (?eq #\/) (=int) (?eq #\/) (=int))
-	(list y m d)))
+	(adjust-timestamp (make-timestamp)
+	  (set :year y)
+	  (set :month m)
+	  (set :day d))))
 
 (defun =float ()
   (=transform

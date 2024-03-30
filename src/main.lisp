@@ -1,5 +1,5 @@
 (defpackage cl-training
-  (:use :cl :cl-training.parsers :maxpc :cl-training.classes :cl-training.print :eazy-gnuplot))
+  (:use :cl :cl-training.parsers :maxpc :cl-training.classes :cl-training.print :eazy-gnuplot :local-time))
 (in-package :cl-training)
 
 (declaim (optimize (debug 3)))
@@ -159,7 +159,7 @@
 						(set-reps set))))
 
 (defun date-gnuplot (s date)
-  (format s "~{~2,'0d~^-~}" date))
+  (format-timestring s date :format '((:year 4) #\- (:month 2) #\- (:day 2))))
 
 (defun plot-time/value (output title data)
   (with-plots (s :debug t)
