@@ -9,10 +9,7 @@
 (defun =date ()
   (=destructure (y _ m _ d)
 				(=list (=int) (?eq #\/) (=int) (?eq #\/) (=int))
-	(adjust-timestamp (make-timestamp)
-	  (set :year y)
-	  (set :month m)
-	  (set :day d))))
+	(encode-timestamp 0 0 0 0 d m y)))
 
 (defun =float ()
   (=transform
