@@ -6,9 +6,12 @@ CLOSED: [2024-03-30 Sa 13:10]
 ** TODO Set combining/ exploding library
 ** DONE Plotting (progress of exercises over time)
 CLOSED: [2024-03-30 Sa 11:35]
-** TODO Implement tonnage report
+** DONE Implement tonnage report
+CLOSED: [2024-04-01 Mo 20:40]
 ** TODO Multi-plot different exercises
-*** TODO 1rm
-*** TODO Tonnage
+*** DONE 1rm
+CLOSED: [2024-04-01 Mo 20:22]
+*** DONE Tonnage
+CLOSED: [2024-04-01 Mo 20:40]
 *** TODO Max weight
 

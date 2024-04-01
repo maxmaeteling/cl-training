@@ -8,6 +8,7 @@
                 ((:file "classes")
 				 (:file "parsers")
 				 (:file "print")
+				 (:file "plots")
 				 (:file "main"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-training/tests"))))
