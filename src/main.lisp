@@ -178,6 +178,26 @@
 	 :with '(:points :pt 7))
 	output))
 
+(defun plot-time/values (output title data-titles data)
+  (with-plots (s :debug t)
+	(gp-setup :terminal '(png :size "1200,900") :output output)
+	(gp :set :xdata 'time)
+    (gp :set :timefmt "%Y-%m-%d")
+	(gp :set :format '(x "%m/%y"))
+	(gp :set :title title)
+	(flet ((data ()
+			 (loop
+			   for (date . values) in data
+			   for date-gp = (date-gnuplot nil date)
+			   do (format s "~&~a ~{~a~^ ~}" date-gp (mapcar #'float values)))))
+	  (loop
+		for i from 2 to (length (car data))
+		do (plot
+			#'data
+			:using (list 1 i) :title (nth (- i 2) data-titles)
+			:with '(:points :pt 7))))
+	output))
+
 (defun output-image-path (name)
   (merge-pathnames name *images-path*))
 
@@ -193,6 +213,33 @@
 				:exercise #'(lambda (e) (and (funcall exercise e)
 											 (string= (exercise-name e)
 													  exercise-name)))))))
+
+(defun exercise-plot-time/1rms (exercise-names title file)
+  (plot-time/values
+   (output-image-path file)
+   title
+   exercise-names
+   (columnify exercise-names
+			  (trainings-1rms
+			   (normalize-exercise-names
+				(load-parse-training))))))
+
+(defun columnify (exercise-names logbook)
+  (loop
+	for training in logbook
+	for results = (loop
+					for name in exercise-names
+					collect (exercises-exercise-max name (training-exercises training)))
+	collect (cons (training-date training) results)))
+
+(defun exercises-exercise-max (name exercises)
+  (loop
+	for exercise in exercises
+	when (string= name
+				  (exercise-name exercise))
+	maximize (loop
+			   for set in (exercise-sets exercise)
+			   maximize (set-max-effort set))))
 
 (defun exercise-plot-time/tonnage (exercise title file)
   (plot-time/value
