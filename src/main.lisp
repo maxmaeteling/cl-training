@@ -162,7 +162,7 @@
   (format-timestring s date :format '((:year 4) #\- (:month 2) #\- (:day 2))))
 
 (defun plot-time/value (output title data)
-  (with-plots (s :debug t)
+  (with-plots (s :debug nil)
 	(gp-setup :terminal '(png :size "1200,900") :output output)
 	(gp :set :xdata 'time)
     (gp :set :timefmt "%Y-%m-%d")
