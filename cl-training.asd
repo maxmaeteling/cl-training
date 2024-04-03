@@ -5,8 +5,10 @@
   :depends-on ("maxpc" "parse-number" "eazy-gnuplot" "local-time")
   :components ((:module "src"
                 :components
-                ((:file "classes")
+                ((:file "config")
+				 (:file "classes")
 				 (:file "parsers")
+				 (:file "log")
 				 (:file "print")
 				 (:file "plots")
 				 (:file "main"))))

@@ -1,39 +1,19 @@
 (defpackage cl-training.plots
-  (:use :cl :eazy-gnuplot :local-time))
+  (:use :cl :eazy-gnuplot :local-time :cl-training.classes :cl-training.config
+		:cl-training.parsers :cl-training.log)
+  (:export
+   #:plot-time/values
+   #:exercise-plot-time/1rm
+   #:exercise-plot-time/1rms
+   #:exercise-plot-time/tonnage))
+
 (in-package :cl-training.plots)
+
+(defun output-image-path (name)
+  (merge-pathnames name *images-path*))
 
 (defun date-gnuplot (s date)
   (format-timestring s date :format '((:year 4) #\- (:month 2) #\- (:day 2))))
-
-(defun plot-time/value (output title data)
-  (with-plots (s :debug nil)
-	(gp-setup :terminal '(png :size "1200,900") :output output)
-	(gp :set :xdata 'time)
-    (gp :set :timefmt "%Y-%m-%d")
-	(gp :set :format '(x "%m/%y"))
-	(gp :set :title title)
-	(plot
-	 (lambda ()
-	   (loop
-		 for (date value) in data
-		 for date-gp = (date-gnuplot nil date)
-		 do (format s "~&~a ~a" date-gp (float value))))
-	 :using '(1 2)
-	 :with '(:points :pt 7))
-	output))
-
-(defun exercise-plot-time/1rm (exercise-name title file
-							   &key (training #'(lambda (x) (declare (ignore x)) t))
-								 (exercise #'(lambda (x) (declare (ignore x)) t)))
-  (plot-time/value
-   (output-image-path file)
-   title
-   (logbook-date-weight
-	(filter-log (trainings-1rms (normalize-exercise-names (load-parse-training)))
-				:training training
-				:exercise #'(lambda (e) (and (funcall exercise e)
-											 (string= (exercise-name e)
-													  exercise-name)))))))
 
 (defun plot-time/values (output title data-titles data)
   (with-plots (s :debug nil)
@@ -55,15 +35,29 @@
 			:with '(:points :pt 7))))
 	output))
 
-(defun exercise-plot-time/1rms (exercise-names title file)
+(defun exercise-plot-time/1rm (exercise-name title file
+							   &key (training #'(lambda (x) (declare (ignore x)) t))
+								 (exercise #'(lambda (x) (declare (ignore x)) t)))
+  (exercise-plot-time/1rms (list exercise-name)
+						   (list title)
+						   title
+						   file
+						   :training training
+						   :exercise exercise))
+
+(defun exercise-plot-time/1rms (exercise-names exercise-titles title file
+								&key (training #'(lambda (x) (declare (ignore x)) t))
+								  (exercise #'(lambda (x) (declare (ignore x)) t)))
   (plot-time/values
    (output-image-path file)
    title
-   exercise-names
+   exercise-titles
    (columnify exercise-names
 			  (trainings-1rms
-			   (normalize-exercise-names
-				(load-parse-training))))))
+			   (filter-log 
+				(normalize-exercise-names (load-parse-training))
+				:training training
+				:exercise exercise)))))
 
 (defun columnify (exercise-names logbook)
   (loop
@@ -79,7 +73,7 @@
 	when (string= name (exercise-name exercise))
 	maximize (loop
 			   for set in (exercise-sets exercise)
-			   maximize (set-max-effort set))))
+			   maximize (cl-training.log:set-max-effort set))))
 
 (defun exercise-plot-time/tonnage (exercise title file)
   (plot-time/value
