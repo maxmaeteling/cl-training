@@ -59,6 +59,20 @@
 				:training training
 				:exercise exercise)))))
 
+(defun exercise-plot-time/tonnages (exercise-names exercise-titles title file
+									&key (training #'(lambda (x) (declare (ignore x)) t))
+									  (exercise #'(lambda (x) (declare (ignore x)) t)))
+  (plot-time/values
+   (output-image-path file)
+   title
+   exercise-titles
+   (columnify exercise-names
+			  (trainings-tonnage
+			   (filter-log
+				(normalize-exercise-names (load-parse-training))
+				:exercise exercise
+				:training training)))))
+
 (defun columnify (exercise-names logbook)
   (loop
 	for training in logbook
@@ -75,11 +89,3 @@
 			   for set in (exercise-sets exercise)
 			   maximize (cl-training.log:set-max-effort set))))
 
-(defun exercise-plot-time/tonnage (exercise title file)
-  (plot-time/value
-   (output-image-path file)
-   title
-   (logbook-date-weight
-	(trainings-tonnage (filter-log (normalize-exercise-names (load-parse-training))
-								   :exercise #'(lambda (e) (string= (exercise-name e)
-																	exercise)))))))
