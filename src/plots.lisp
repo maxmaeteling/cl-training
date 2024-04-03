@@ -45,6 +45,16 @@
 						   :training training
 						   :exercise exercise))
 
+(defun exercise-plot-time/tonnage (exercise-name title file
+							   &key (training #'(lambda (x) (declare (ignore x)) t))
+								 (exercise #'(lambda (x) (declare (ignore x)) t)))
+  (exercise-plot-time/tonnages (list exercise-name)
+							   (list title)
+							   title
+							   file
+							   :training training
+							   :exercise exercise))
+
 (defun exercise-plot-time/1rms (exercise-names exercise-titles title file
 								&key (training #'(lambda (x) (declare (ignore x)) t))
 								  (exercise #'(lambda (x) (declare (ignore x)) t)))

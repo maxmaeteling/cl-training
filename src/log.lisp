@@ -9,7 +9,8 @@
    #:create-alias-db
    #:filter-log
    #:trainings-1rms
-   #:set-max-effort))
+   #:set-max-effort
+   #:trainings-tonnage))
 
 (in-package :cl-training.log)
 
