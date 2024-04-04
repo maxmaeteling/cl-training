@@ -1,10 +1,14 @@
 (defpackage cl-training.print
-  (:use :cl :cl-training.classes)
+  (:use :cl :cl-training.classes :local-time)
   (:export :output-readable))
 (in-package :cl-training.classes)
 
-(defun output-date (stream date-list)
-  (format stream "~{~2,'0d~^/~}~%" date-list))
+(defun output-date (stream date)
+  (local-time:format-timestring stream
+								date
+								:format (list '(:year 4) #\/
+											  '(:month 2) #\/
+											  '(:day 2))))
 
 (defmethod output-set-readable (stream (set exercise-set))
   (format stream "~{~d~^,~}" (set-reps set)))
@@ -25,7 +29,9 @@
 (defun output-readable (log &optional (stream nil))
   (loop
 	for training in log
-	do (progn (output-date stream (training-date training))
+	do (progn (format stream "~&")
+			  (output-date stream (training-date training))
+			  (format stream "~&")
 			  (mapcar #'(lambda (ex) (output-exercise-readable stream ex))
 					  (training-exercises training))
 			  (format stream "~%"))))

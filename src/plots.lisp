@@ -125,4 +125,3 @@
 	maximize (loop
 			   for set in (exercise-sets exercise)
 			   maximize (cl-training.log:set-max-effort set))))
-
