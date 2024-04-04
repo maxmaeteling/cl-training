@@ -13,5 +13,6 @@ CLOSED: [2024-04-01 Mo 20:40]
 CLOSED: [2024-04-01 Mo 20:22]
 *** DONE Tonnage
 CLOSED: [2024-04-01 Mo 20:40]
-*** TODO Max weight
+*** DONE Max weight
+CLOSED: [2024-04-04 Do 07:09]
 ** TODO Basic reporting
