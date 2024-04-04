@@ -67,7 +67,8 @@
 			   (filter-log 
 				(normalize-exercise-names (load-parse-training))
 				:training training
-				:exercise exercise)))))
+				:exercise #'(lambda (ex) (and (funcall exercise ex)
+											  (member (exercise-name ex) exercise-names :test #'string=))))))))
 
 (defun exercise-plot-time/tonnages (exercise-names exercise-titles title file
 									&key (training #'(lambda (x) (declare (ignore x)) t))
@@ -80,8 +81,9 @@
 			  (trainings-tonnage
 			   (filter-log
 				(normalize-exercise-names (load-parse-training))
-				:exercise exercise
-				:training training)))))
+				:training training
+				:exercise #'(lambda (ex) (and (funcall exercise ex)
+											  (member (exercise-name ex) exercise-names :test #'string=))))))))
 
 (defun columnify (exercise-names logbook)
   (loop
