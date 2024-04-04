@@ -5,7 +5,8 @@
    #:plot-time/values
    #:exercise-plot-time/1rm
    #:exercise-plot-time/1rms
-   #:exercise-plot-time/tonnage))
+   #:exercise-plot-time/tonnage
+   #:exercise-plot-time/max-rm))
 
 (in-package :cl-training.plots)
 
@@ -35,6 +36,16 @@
 			:with '(:points :pt 7))))
 	output))
 
+(defun exercise-plot-time/max-rm (exercise-name title file
+								  &key (training #'(lambda (x) (declare (ignore x)) t))
+									(exercise #'(lambda (x) (declare (ignore x)) t)))
+  (exercise-plot-time/max-rms (list exercise-name)
+							  (list title)
+							  title
+							  file
+							  :training training
+							  :exercise exercise))
+
 (defun exercise-plot-time/1rm (exercise-name title file
 							   &key (training #'(lambda (x) (declare (ignore x)) t))
 								 (exercise #'(lambda (x) (declare (ignore x)) t)))
@@ -46,14 +57,28 @@
 						   :exercise exercise))
 
 (defun exercise-plot-time/tonnage (exercise-name title file
-							   &key (training #'(lambda (x) (declare (ignore x)) t))
-								 (exercise #'(lambda (x) (declare (ignore x)) t)))
+								   &key (training #'(lambda (x) (declare (ignore x)) t))
+									 (exercise #'(lambda (x) (declare (ignore x)) t)))
   (exercise-plot-time/tonnages (list exercise-name)
 							   (list title)
 							   title
 							   file
 							   :training training
 							   :exercise exercise))
+
+(defun exercise-plot-time/max-rms (exercise-names exercise-titles title file
+								&key (training #'(lambda (x) (declare (ignore x)) t))
+								  (exercise #'(lambda (x) (declare (ignore x)) t)))
+  (plot-time/values
+   (output-image-path file)
+   title
+   exercise-titles
+   (columnify exercise-names
+			  (filter-log 
+			   (normalize-exercise-names (load-parse-training))
+			   :training training
+			   :exercise #'(lambda (ex) (and (funcall exercise ex)
+											 (member (exercise-name ex) exercise-names :test #'string=)))))))
 
 (defun exercise-plot-time/1rms (exercise-names exercise-titles title file
 								&key (training #'(lambda (x) (declare (ignore x)) t))
