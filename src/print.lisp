@@ -14,10 +14,10 @@
   (format stream "~{~d~^,~}" (set-reps set)))
 
 (defmethod output-set-readable (stream (set set-weight))
-  (format stream "~d*~a" (set-reps set) (set-weight set)))
+  (format stream "~d*~f" (set-reps set) (set-weight set)))
 
 (defmethod output-set-readable (stream (set multi-set-weight))
-  (format stream "~d*~d*~a" (set-number set) (set-reps set) (set-weight set)))
+  (format stream "~d*~d*~f" (set-number set) (set-reps set) (set-weight set)))
 
 (defun output-exercise-readable (stream exercise)
   (format stream
