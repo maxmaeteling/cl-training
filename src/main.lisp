@@ -7,7 +7,15 @@
   (exercise-plot-time/1rm "deadlifts" "Deadlifts" "deadlifts_1rm.png")
   (exercise-plot-time/1rm "low bar squat" "Squats" "squats_1rm.png")
   (exercise-plot-time/1rm "press" "Press" "press_1rm.png")
-  (exercise-plot-time/1rm "bench press" "Bench Press" "bench_1rm.png"))
+  (exercise-plot-time/1rm "bench press" "Bench Press" "bench_1rm.png")
+  (let ((exercises '("Low Bar Squat"
+					 "Deadlifts"
+					 "Press"
+					 "Bench Press")))
+	(exercise-plot-time/1rms (mapcar #'string-downcase exercises)
+							 exercises
+							 "1rm Comparison"
+							 "comparison_1rm.png")))
 
 (defun print-exercise-1rms (exercise-name)
   (output-readable
