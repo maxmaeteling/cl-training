@@ -49,7 +49,9 @@
 
 (defun 1rm (weight reps)
   "Calculate 1 repetition max based on weights anc reps according to Brzycki formula from https://en.wikipedia.org/wiki/One-repetition_maximum"
-  (/ weight (- (/ 37 36) (/ reps 36))))
+  (if (< reps 10)
+	  (/ weight (- (/ 37 36) (/ reps 36)))
+	  (/ weight (- (/ 37 36) (/ 10 36)))))
 
 (defun tonnage (sets reps weight)
   (* sets reps weight))
