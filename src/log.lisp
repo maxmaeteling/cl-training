@@ -10,7 +10,8 @@
    #:filter-log
    #:trainings-1rms
    #:set-max-effort
-   #:trainings-tonnage))
+   #:trainings-tonnage
+   #:ensure-alias-db))
 
 (in-package :cl-training.log)
 
@@ -34,6 +35,10 @@
 
 (defun normalize-exercise-name (name &optional (db *alias-db*))
   (gethash name db))
+
+(defun ensure-alias-db ()
+  (when (not *alias-db*)
+	(create-alias-db)))
 
 (defun create-alias-db ()
   (setf *alias-db* (build-alias-hashtable)))

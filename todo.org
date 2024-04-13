@@ -2,12 +2,13 @@
 ** DONE Proper date data type/ library
 CLOSED: [2024-03-30 Sa 13:10]
 ** TODO Structured (beautified/ tabularized) output
-** TODO Structured output in input format
+** DONE Structured output in input format
+CLOSED: [2024-04-13 Sa 17:35]
 ** TODO Set combining/ exploding library
 ** DONE Plotting (progress of exercises over time)
 CLOSED: [2024-03-30 Sa 11:35]
 ** DONE Implement tonnage report
-CLOSED: [2024-04-01 Mo 20:40]
+CLOSED: [2024-04-13 Sa 17:35]
 ** DONE Multi-plot different exercises
 CLOSED: [2024-04-08 Mo 07:16]
 *** DONE 1rm
@@ -16,4 +17,5 @@ CLOSED: [2024-04-01 Mo 20:22]
 CLOSED: [2024-04-01 Mo 20:40]
 *** DONE Max weight
 CLOSED: [2024-04-04 Do 07:09]
-** TODO Basic reporting
+** DONE Basic reporting
+CLOSED: [2024-04-13 Sa 17:35]
