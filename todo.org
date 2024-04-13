@@ -8,7 +8,8 @@ CLOSED: [2024-03-30 Sa 13:10]
 CLOSED: [2024-03-30 Sa 11:35]
 ** DONE Implement tonnage report
 CLOSED: [2024-04-01 Mo 20:40]
-** TODO Multi-plot different exercises
+** DONE Multi-plot different exercises
+CLOSED: [2024-04-08 Mo 07:16]
 *** DONE 1rm
 CLOSED: [2024-04-01 Mo 20:22]
 *** DONE Tonnage
