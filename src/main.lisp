@@ -24,3 +24,8 @@
 				:exercise #'(lambda (ex) (string= exercise-name
 												  (exercise-name ex)))))
    t))
+
+(defun print-log ()
+  (output-readable
+    (normalize-exercise-names (load-parse-training))
+   t))
