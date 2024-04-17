@@ -1,12 +1,13 @@
 (defpackage cl-training.plots
   (:use :cl :eazy-gnuplot :local-time :cl-training.classes :cl-training.config
-		:cl-training.parsers :cl-training.log)
+   :cl-training.parsers :cl-training.log)
   (:export
    #:plot-time/values
    #:exercise-plot-time/1rm
    #:exercise-plot-time/1rms
    #:exercise-plot-time/tonnage
-   #:exercise-plot-time/max-rm))
+   #:exercise-plot-time/max-rm
+   #:exercise-plot-time/tonnages))
 
 (in-package :cl-training.plots)
 
@@ -36,51 +37,54 @@
 			:with '(:points :pt 7))))
 	output))
 
-(defun exercise-plot-time/max-rm (exercise-name title file
+(defun exercise-plot-time/max-rm (log exercise-name title file
 								  &key (training #'(lambda (x) (declare (ignore x)) t))
 									(exercise #'(lambda (x) (declare (ignore x)) t)))
-  (exercise-plot-time/max-rms (list exercise-name)
+  (exercise-plot-time/max-rms log
+							  (list exercise-name)
 							  (list title)
 							  title
 							  file
 							  :training training
 							  :exercise exercise))
 
-(defun exercise-plot-time/1rm (exercise-name title file
+(defun exercise-plot-time/1rm (log exercise-name title file
 							   &key (training #'(lambda (x) (declare (ignore x)) t))
 								 (exercise #'(lambda (x) (declare (ignore x)) t)))
-  (exercise-plot-time/1rms (list exercise-name)
+  (exercise-plot-time/1rms log
+						   (list exercise-name)
 						   (list title)
 						   title
 						   file
 						   :training training
 						   :exercise exercise))
 
-(defun exercise-plot-time/tonnage (exercise-name title file
+(defun exercise-plot-time/tonnage (log exercise-name title file
 								   &key (training #'(lambda (x) (declare (ignore x)) t))
 									 (exercise #'(lambda (x) (declare (ignore x)) t)))
-  (exercise-plot-time/tonnages (list exercise-name)
+  (exercise-plot-time/tonnages log
+							   (list exercise-name)
 							   (list title)
 							   title
 							   file
 							   :training training
 							   :exercise exercise))
 
-(defun exercise-plot-time/max-rms (exercise-names exercise-titles title file
-								&key (training #'(lambda (x) (declare (ignore x)) t))
-								  (exercise #'(lambda (x) (declare (ignore x)) t)))
+(defun exercise-plot-time/max-rms (log exercise-names exercise-titles title file
+								   &key (training #'(lambda (x) (declare (ignore x)) t))
+									 (exercise #'(lambda (x) (declare (ignore x)) t)))
   (plot-time/values
    (output-image-path file)
    title
    exercise-titles
    (columnify exercise-names
 			  (filter-log 
-			   (normalize-exercise-names (load-parse-training))
+			   log
 			   :training training
 			   :exercise #'(lambda (ex) (and (funcall exercise ex)
 											 (member (exercise-name ex) exercise-names :test #'string=)))))))
 
-(defun exercise-plot-time/1rms (exercise-names exercise-titles title file
+(defun exercise-plot-time/1rms (log exercise-names exercise-titles title file
 								&key (training #'(lambda (x) (declare (ignore x)) t))
 								  (exercise #'(lambda (x) (declare (ignore x)) t)))
   (plot-time/values
@@ -90,12 +94,12 @@
    (columnify exercise-names
 			  (trainings-1rms
 			   (filter-log 
-				(normalize-exercise-names (load-parse-training))
+				log
 				:training training
 				:exercise #'(lambda (ex) (and (funcall exercise ex)
 											  (member (exercise-name ex) exercise-names :test #'string=))))))))
 
-(defun exercise-plot-time/tonnages (exercise-names exercise-titles title file
+(defun exercise-plot-time/tonnages (log exercise-names exercise-titles title file
 									&key (training #'(lambda (x) (declare (ignore x)) t))
 									  (exercise #'(lambda (x) (declare (ignore x)) t)))
   (plot-time/values
@@ -105,7 +109,7 @@
    (columnify exercise-names
 			  (trainings-tonnage
 			   (filter-log
-				(normalize-exercise-names (load-parse-training))
+				log
 				:training training
 				:exercise #'(lambda (ex) (and (funcall exercise ex)
 											  (member (exercise-name ex) exercise-names :test #'string=))))))))
@@ -122,6 +126,6 @@
   (loop
 	for exercise in exercises
 	when (string= name (exercise-name exercise))
-	maximize (loop
-			   for set in (exercise-sets exercise)
-			   maximize (cl-training.log:set-max-effort set))))
+	  maximize (loop
+				 for set in (exercise-sets exercise)
+				 maximize (cl-training.log:set-max-effort set))))
