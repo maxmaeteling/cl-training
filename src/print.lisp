@@ -35,3 +35,34 @@
 			  (mapcar #'(lambda (ex) (output-exercise-readable stream ex))
 					  (training-exercises training))
 			  (format stream "~%"))))
+
+(defgeneric columnize (object)
+  (:documentation "Representation of object as a list of fields")
+  (:method ((o list)) o))
+
+(defun transpose (lists)
+  (when (notany #'null lists)
+	(cons (mapcar #'first lists)
+		  (transpose (mapcar #'cdr lists)))))
+
+(defun tabulate (stream objects)
+  (loop 
+	for n from 0
+	for o in objects
+	for row = (mapcar #'princ-to-string (columnize o))
+	collect row into rows 
+	collect (mapcar #'length row) into row-widths 
+	finally 
+	   (flet ((build-format-arguments (max-width row) 
+				(when (> max-width 0) 
+				  (list max-width #\space row)))) 
+		 (loop
+		   with number-width = (ceiling (log n 10)) 
+		   with col-widths = (transpose row-widths) 
+		   with max-col-widths = (mapcar (lambda (s) (reduce #'max s)) col-widths)
+		   for index from 0 
+		   for row in rows
+		   for entries = (mapcan #'build-format-arguments max-col-widths row) 
+		   do (format stream
+					  "~v,'0d. ~{~v,,,va~^ ~}~%" 
+					  number-width index entries)))))
