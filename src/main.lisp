@@ -7,7 +7,7 @@
   (let ((log (filter-log (normalize-exercise-names (load-parse-training))
 						 :training #'(lambda (tr)
 									   (timestamp< (adjust-timestamp (now)
-													 (offset :year -1))
+																	 (offset :year -1))
 												   (training-date tr))))))
 	(let ((exercises '("Low Bar Squat"
 					   "Deadlifts"
@@ -31,10 +31,10 @@
 							   "1rm Comparison"
 							   "comparison_1rm.png")
 	  (exercise-plot-time/tonnages log
-								  (mapcar #'string-downcase exercises)
-								  exercises
-								  "Tonnage Comparison"
-								  "comparison_tonnage.png"))))
+								   (mapcar #'string-downcase exercises)
+								   exercises
+								   "Tonnage Comparison"
+								   "comparison_tonnage.png"))))
 
 (defun print-exercise-1rms (exercise-name)
   (ensure-alias-db)
