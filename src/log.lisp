@@ -29,8 +29,8 @@
 	for word = (car aliases)
 	with alias-hash = (make-hash-table :test #'equalp)
 	do (mapcar #'(lambda (alias)
-			   (setf (gethash alias alias-hash) word))
-		   aliases)
+				   (setf (gethash alias alias-hash) word))
+			   aliases)
 	finally (return alias-hash)))
 
 (defun normalize-exercise-name (name &optional (db *alias-db*))
@@ -62,7 +62,7 @@
   (* sets reps weight))
 
 (defun filter-log (log &key (training #'(lambda (x) (declare (ignore x)) t))
-					 (exercise #'(lambda (x) (declare (ignore x)) t)))
+						 (exercise #'(lambda (x) (declare (ignore x)) t)))
   (loop
 	for tr in log
 	for exercises-filtered = (loop
@@ -121,7 +121,7 @@
 (defun exercise-1rm (exercise)
   (make-exercise (exercise-name exercise)
 				 (list (reduce #'set>= (mapcar #'set-1rm
-												 (exercise-sets exercise))))))
+											   (exercise-sets exercise))))))
 
 (defmethod set-1rm ((set exercise-set))
   (make-exercise-set (reduce #'max (set-reps set))))
@@ -132,9 +132,9 @@
 						(set-reps set))))
 
 (defmethod set-1rm ((set multi-set-weight))
-    (make-set-weight 1
-					 (1rm (set-weight set)
-						  (set-reps set))))
+  (make-set-weight 1
+				   (1rm (set-weight set)
+						(set-reps set))))
 
 (defun trainings-tonnage (log)
   (mapcar #'training-tonnage log))

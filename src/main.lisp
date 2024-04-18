@@ -5,8 +5,10 @@
 (defun regenerate-plots ()
   (ensure-alias-db)
   (let ((log (filter-log (normalize-exercise-names (load-parse-training))
-						 :training #'(lambda (tr) (timestamp< (adjust-timestamp (now) (offset :year -1))
-															  (training-date tr))))))
+						 :training #'(lambda (tr)
+									   (timestamp< (adjust-timestamp (now)
+													 (offset :year -1))
+												   (training-date tr))))))
 	(let ((exercises '("Low Bar Squat"
 					   "Deadlifts"
 					   "Press"
@@ -38,6 +40,15 @@
   (ensure-alias-db)
   (output-readable
    (trainings-1rms
+	(filter-log (normalize-exercise-names (load-parse-training))
+				:exercise #'(lambda (ex) (string= exercise-name
+												  (exercise-name ex)))))
+   t))
+
+(defun print-exercise-tonnage (exercise-name)
+  (ensure-alias-db)
+  (output-readable
+   (trainings-tonnage
 	(filter-log (normalize-exercise-names (load-parse-training))
 				:exercise #'(lambda (ex) (string= exercise-name
 												  (exercise-name ex)))))
