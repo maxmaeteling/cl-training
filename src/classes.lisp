@@ -18,7 +18,10 @@
    :exercise-sets
    :set-reps
    :set-number
-   :output-readable))
+   :output-readable
+   :output-date
+   :transpose
+   :tabulate))
 (in-package :cl-training.classes)
 
 (defclass training ()

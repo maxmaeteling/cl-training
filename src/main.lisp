@@ -1,5 +1,11 @@
 (defpackage cl-training
-  (:use :cl :cl-training.plots :cl-training.log :cl-training.print  :cl-training.classes :local-time))
+  (:use
+   :cl
+   :cl-training.plots
+   :cl-training.log
+   :cl-training.print
+   :cl-training.classes
+   :local-time))
 (in-package :cl-training)
 
 (defun regenerate-plots ()
@@ -7,7 +13,7 @@
   (let ((log (filter-log (normalize-exercise-names (load-parse-training))
 						 :training #'(lambda (tr)
 									   (timestamp< (adjust-timestamp (now)
-																	 (offset :year -1))
+													 (offset :year -1))
 												   (training-date tr))))))
 	(let ((exercises '("Low Bar Squat"
 					   "Deadlifts"
@@ -59,3 +65,21 @@
   (output-readable
    (normalize-exercise-names (load-parse-training))
    t))
+
+(defun print-1rm-table (exercises)
+  (let ((log (trainings-1rms
+			  (filter-log (normalize-exercise-names (load-parse-training))
+						  :exercise #'(lambda (ex) (member (exercise-name ex)
+														   exercises :test #'string=))))))
+	(tabulate t
+			  (loop
+				for training in log
+				collect (append (list (output-date nil (training-date training)))
+								(loop
+								  for exercise in exercises
+								  collect (float (or (loop
+													   for training-exercise in (training-exercises training)
+													   when (string= exercise
+																	 (exercise-name training-exercise))
+														 do (return (set-weight (first (exercise-sets training-exercise)))))
+													 0))))))))
