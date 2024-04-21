@@ -19,9 +19,7 @@
    :set-reps
    :set-number
    :output-readable
-   :output-date
-   :transpose
-   :tabulate))
+   :output-date))
 (in-package :cl-training.classes)
 
 (defclass training ()

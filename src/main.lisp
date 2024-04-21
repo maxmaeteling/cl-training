@@ -66,20 +66,27 @@
    (normalize-exercise-names (load-parse-training))
    t))
 
-(defun print-1rm-table (exercises)
+(defun print-1rm-table (stream exercises)
   (let ((log (trainings-1rms
 			  (filter-log (normalize-exercise-names (load-parse-training))
 						  :exercise #'(lambda (ex) (member (exercise-name ex)
 														   exercises :test #'string=))))))
-	(tabulate t
-			  (loop
-				for training in log
-				collect (append (list (output-date nil (training-date training)))
-								(loop
-								  for exercise in exercises
-								  collect (float (or (loop
-													   for training-exercise in (training-exercises training)
-													   when (string= exercise
-																	 (exercise-name training-exercise))
-														 do (return (set-weight (first (exercise-sets training-exercise)))))
-													 0))))))))
+	(format-table
+	 stream
+	 (mapcar #'(lambda (training)
+					   (cons
+						(output-date nil (training-date training))
+						(mapcar #'(lambda (exercise)
+									(format nil "~,2f"
+											(or
+											 (loop
+											   for training-exercise in (training-exercises training)
+											   when (string= exercise
+															 (exercise-name training-exercise))
+												 do (return (set-weight (first (exercise-sets training-exercise)))))
+											 0)))
+								exercises)))
+				   log)
+	 
+	 :column-label (mapcar #'string-upcase (cons "date" exercises))
+	 :column-align (cons :left (loop repeat (length exercises) collect :right)))))
