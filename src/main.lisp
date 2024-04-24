@@ -87,6 +87,5 @@
 											 0)))
 								exercises)))
 				   log)
-	 
 	 :column-label (mapcar #'string-upcase (cons "date" exercises))
 	 :column-align (cons :left (loop repeat (length exercises) collect :right)))))

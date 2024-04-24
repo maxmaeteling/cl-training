@@ -17,13 +17,14 @@
 (defun date-gnuplot (s date)
   (format-timestring s date :format '((:year 4) #\- (:month 2) #\- (:day 2))))
 
-(defun plot-time/values (output title data-titles data)
-  (with-plots (s :debug nil)
+(defun plot-time/values (output title data-titles data &optional (debug nil))
+  (with-plots (s :debug debug)
 	(gp-setup :terminal '(png :size "1200,900") :output output)
 	(gp :set :xdata 'time)
     (gp :set :timefmt "%Y-%m-%d")
 	(gp :set :format '(x "%m/%y"))
 	(gp :set :title title)
+	(gp :set :datafile '(:missing "0.0"))
 	(flet ((data ()
 			 (loop
 			   for (date . values) in data
