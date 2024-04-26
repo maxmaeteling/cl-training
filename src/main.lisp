@@ -6,6 +6,7 @@
    :cl-training.print
    :cl-training.classes
    :local-time))
+
 (in-package :cl-training)
 
 (defun regenerate-plots ()

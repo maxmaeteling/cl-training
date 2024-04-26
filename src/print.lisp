@@ -1,7 +1,11 @@
 (defpackage cl-training.print
   (:use :cl :cl-training.classes :local-time)
-  (:export :output-readable))
-(in-package :cl-training.classes)
+  (:export
+   :output-date
+   :output-readable
+   :format-table))
+
+(in-package :cl-training.print)
 
 (defconstant +CELL-FORMATS+ '(:left   "~vA"
                               :center "~v:@<~A~>"

@@ -2,12 +2,12 @@
   (:use :cl :eazy-gnuplot :local-time :cl-training.classes :cl-training.config
    :cl-training.parsers :cl-training.log)
   (:export
-   #:plot-time/values
-   #:exercise-plot-time/1rm
-   #:exercise-plot-time/1rms
-   #:exercise-plot-time/tonnage
-   #:exercise-plot-time/max-rm
-   #:exercise-plot-time/tonnages))
+   :plot-time/values
+   :exercise-plot-time/1rm
+   :exercise-plot-time/1rms
+   :exercise-plot-time/tonnage
+   :exercise-plot-time/max-rm
+   :exercise-plot-time/tonnages))
 
 (in-package :cl-training.plots)
 

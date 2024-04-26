@@ -17,9 +17,7 @@
    :exercise-name
    :exercise-sets
    :set-reps
-   :set-number
-   :output-readable
-   :output-date))
+   :set-number))
 (in-package :cl-training.classes)
 
 (defclass training ()
