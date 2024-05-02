@@ -5,6 +5,7 @@ CLOSED: [2024-03-30 Sa 13:10]
 ** DONE Structured output in input format
 CLOSED: [2024-04-13 Sa 17:35]
 ** TODO Set combining/ exploding library
+** TODO Proper parsing and display of myo reps
 ** DONE Plotting (progress of exercises over time)
 CLOSED: [2024-03-30 Sa 11:35]
 ** DONE Implement tonnage report
