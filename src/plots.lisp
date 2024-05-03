@@ -25,6 +25,8 @@
 	(gp :set :format '(x "%m/%y"))
 	(gp :set :title title)
 	(gp :set :datafile '(:missing "0.0"))
+	(gp :set :grid :ytics)
+	(gp :set :key :left :top)
 	(flet ((data ()
 			 (loop
 			   for (date . values) in data

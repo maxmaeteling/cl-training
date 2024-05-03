@@ -11,11 +11,12 @@
 
 (defun regenerate-plots ()
   (ensure-alias-db)
-  (let ((log (filter-log (normalize-exercise-names (load-parse-training))
-						 :training #'(lambda (tr)
-									   (timestamp< (adjust-timestamp (now)
-													 (offset :year -1))
-												   (training-date tr))))))
+  (let* ((log-unfiltered (normalize-exercise-names (load-parse-training)))
+		 (log (filter-log log-unfiltered
+						  :training #'(lambda (tr)
+										(timestamp< (adjust-timestamp (now)
+													  (offset :year -1))
+													(training-date tr))))))
 	(let ((exercises '("Low Bar Squat"
 					   "Deadlifts"
 					   "Press"
@@ -24,7 +25,13 @@
 				  (exercise-plot-time/1rm log
 										  (string-downcase exercise)
 										  exercise
-										  (format nil "~a_1rm.png" (string-downcase exercise))))
+										  (format nil "~a_1rm_last_year.png" (string-downcase exercise))))
+			  exercises)
+	  (mapcar #'(lambda (exercise)
+				  (exercise-plot-time/1rm log-unfiltered
+										  (string-downcase exercise)
+										  exercise
+										  (format nil "~a_1rm_all_time.png" (string-downcase exercise))))
 			  exercises)
 	  (mapcar #'(lambda (exercise)
 				  (exercise-plot-time/tonnage log
