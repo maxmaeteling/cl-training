@@ -11,7 +11,8 @@
    #:trainings-1rms
    #:set-max-effort
    #:trainings-tonnage
-   #:ensure-alias-db))
+   #:ensure-alias-db
+   #:log-sets))
 
 (in-package :cl-training.log)
 
@@ -161,3 +162,26 @@
   (make-set-weight 1 (* (set-number set)
 						(set-weight set)
 						(set-reps set))))
+
+(defmethod training-index ((training training))
+  (training-date training))
+
+(defun log-sets (log)
+  (let ((training-dates (make-array 128 :fill-pointer 0))
+		(exercise-names (make-array 64 :fill-pointer 0))
+		(sets (make-array '(4096 3) :adjustable t)))
+	(loop
+	  for training in log
+	  with i = 0
+	  do (progn
+		   (vector-push (training-index training) training-dates)
+		   (loop
+			 for exercise in (training-exercises training)
+			 do (vector-push (exercise-name exercise) exercise-names)
+			 do (loop
+				  for set in (exercise-sets exercise)
+				  do (progn (setf (aref sets i 0) (1- (fill-pointer training-dates))
+								  (aref sets i 1) (1- (fill-pointer exercise-names))
+								  (aref sets i 2) set)
+							(incf i))))))
+	(values training-dates exercise-names sets)))

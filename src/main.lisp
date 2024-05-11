@@ -20,7 +20,8 @@
 	(let ((exercises '("Low Bar Squat"
 					   "Deadlifts"
 					   "Press"
-					   "Bench Press")))
+					   "Bench Press"
+					   "Power Clean")))
 	  (mapcar #'(lambda (exercise)
 				  (exercise-plot-time/1rm log
 										  (string-downcase exercise)
@@ -81,19 +82,36 @@
 														   exercises :test #'string=))))))
 	(format-table
 	 stream
-	 (mapcar #'(lambda (training)
-					   (cons
-						(output-date nil (training-date training))
-						(mapcar #'(lambda (exercise)
-									(format nil "~,2f"
-											(or
-											 (loop
-											   for training-exercise in (training-exercises training)
-											   when (string= exercise
-															 (exercise-name training-exercise))
-												 do (return (set-weight (first (exercise-sets training-exercise)))))
-											 0)))
-								exercises)))
-				   log)
+	 (mapcar #'(lambda
+				   (training)
+				 (cons
+				  (output-date nil (training-date training))
+				  (mapcar #'(lambda
+								(exercise)
+							  (format nil "~,2f"
+									  (or
+									   (loop
+										 for training-exercise in (training-exercises training)
+										 when (string= exercise
+													   (exercise-name training-exercise))
+										   do (return (set-weight (first (exercise-sets training-exercise)))))
+									   0)))
+						  exercises)))
+			 log)
 	 :column-label (mapcar #'string-upcase (cons "date" exercises))
 	 :column-align (cons :left (loop repeat (length exercises) collect :right)))))
+
+(defun max-reps (log)
+  (let ((max-weights (make-array 21 :element-type 'float :initial-element 0.0)))
+	(loop
+	  for training in log
+	  do (loop
+		   for exercise in (training-exercises training)
+		   do (loop
+				for set in (exercise-sets exercise)
+				do (when (and
+						  (>= 20 (set-reps set))
+						  (> (set-weight set) (aref max-weights (set-reps set))))
+					 (setf (aref max-weights (set-reps set))
+						   (set-weight set))))))
+	max-weights))
