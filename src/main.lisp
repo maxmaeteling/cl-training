@@ -102,16 +102,18 @@
 	 :column-align (cons :left (loop repeat (length exercises) collect :right)))))
 
 (defun max-reps (log)
-  (let ((max-weights (make-array 21 :element-type 'float :initial-element 0.0)))
+  (let ((max-weights (make-array 20 :element-type 'float :initial-element 0.0)))
 	(loop
 	  for training in log
 	  do (loop
 		   for exercise in (training-exercises training)
 		   do (loop
 				for set in (exercise-sets exercise)
-				do (when (and
-						  (>= 20 (set-reps set))
-						  (> (set-weight set) (aref max-weights (set-reps set))))
-					 (setf (aref max-weights (set-reps set))
-						   (set-weight set))))))
+				do (loop
+					 for i from 1 to (min 20 (set-reps set))
+					 when (< (aref max-weights (1- i))
+							 (set-weight set))
+					   do (setf (aref max-weights (1- i))
+								(set-weight set))))))
 	max-weights))
+

@@ -167,7 +167,7 @@
   (training-date training))
 
 (defun log-sets (log)
-  (let ((training-dates (make-array 128 :fill-pointer 0))
+  (let ((training-dates (make-array 1024 :fill-pointer 0))
 		(exercise-names (make-array 64 :fill-pointer 0))
 		(sets (make-array '(4096 3) :adjustable t)))
 	(loop

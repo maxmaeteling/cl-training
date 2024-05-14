@@ -76,6 +76,9 @@
 (defclass multi-set-weight (set-weight)
   ((set-number :initarg :number :accessor set-number)))
 
+(defun make-multi-set-weight (number reps weight)
+  (make-instance 'multi-set-weight :number number :reps reps :weight weight))
+
 (defmethod print-object ((obj multi-set-weight) stream)
   (print-unreadable-object (obj stream :type t)
     (with-accessors ((number set-number)
@@ -83,9 +86,6 @@
 					 (weight set-weight))
         obj
       (format stream "~a*~a*~a" number reps weight))))
-
-(defun make-multi-set-weight (number reps weight)
-  (make-instance 'multi-set-weight :number number :reps reps :weight weight))
 
 (defun multiply-sets (numbers set-weights)
   (loop

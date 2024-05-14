@@ -20,3 +20,17 @@ CLOSED: [2024-04-01 Mo 20:40]
 CLOSED: [2024-04-04 Do 07:09]
 ** DONE Basic reporting
 CLOSED: [2024-04-13 Sa 17:35]
+* Reports
+** 1rm per exercise over time
+*** All time
+(show-exercises '("low bar squat" "deadlifts") :transform :1rm)
+*** Last year
+(show-exercises '("low bar squat" "deadlifts") :transform :1rm :timespan "last year"))
+** Tonnage per exercise over time
+*** All time
+*** Last year
+** Rep records per exercise
+(show-exercise-rep-table "low bar squat")
+(show-exercise-rep-table '("low bar squat" "deadlifts"))
+** Max 1rm per exercise
+(show-exercise-1rm '("low bar squat" "deadlifts"))
