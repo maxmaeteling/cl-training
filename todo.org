@@ -34,3 +34,26 @@ CLOSED: [2024-04-13 Sa 17:35]
 (show-exercise-rep-table '("low bar squat" "deadlifts"))
 ** Max 1rm per exercise
 (show-exercise-1rm '("low bar squat" "deadlifts"))
+** Tonnage per exercise per time unit
+*** Week
+*** Month
+* Data structures
+** Sets
+# Only reps
+#(0 7 0)
+
+# Multiple sets with only reps
+#(0 7 0) #(0 8 0) #(0 6 0)
+
+# Reps with extra weight (only base is different?)
+#(0 4 5)
+
+# One set at weight
+#(1 5 95)
+
+# Multiple sets at weight
+#(4 5 110)
+
+# Multiple sets at multiple weights?
+#(4 5 110
+  1 8 110)

@@ -116,4 +116,3 @@
 					   do (setf (aref max-weights (1- i))
 								(set-weight set))))))
 	max-weights))
-

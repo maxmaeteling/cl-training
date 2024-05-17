@@ -185,3 +185,34 @@
 								  (aref sets i 2) set)
 							(incf i))))))
 	(values training-dates exercise-names sets)))
+
+(defmethod combineablep ((set-a exercise-set) (set-b exercise-set))
+  nil)
+
+(defmethod combine-sets ((set-a exercise-set) (set-b exercise-set))
+  (list set-a set-b))
+
+(defmethod combineablep ((set-a set-weight) (set-b set-weight))
+  (and (= (set-reps set-a)
+		  (set-reps set-b))
+	   (= (set-weight set-a)
+		  (set-weight set-b))))
+
+(defmethod combine-sets ((set-a set-weight) (set-b set-weight))
+  (if (combineablep set-a set-b)
+	  (list (make-multi-set-weight 2 (set-reps set-a) (set-weight set-b)))
+	  (list set-a set-b)))
+
+(defmethod combineablep ((set-a multi-set-weight) (set-b multi-set-weight))
+  (and (= (set-reps set-a)
+		  (set-reps set-b))
+	   (= (set-weight set-a)
+		  (set-weight set-b))))
+
+(defmethod combine-sets ((set-a multi-set-weight) (set-b multi-set-weight))
+  (if (combineablep set-a set-b)
+	  (list (make-multi-set-weight (+ (set-number set-a)
+									  (set-number set-b))
+								   (set-reps set-a)
+								   (set-weight set-b)))
+	  (list set-a set-b)))
