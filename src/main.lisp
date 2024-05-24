@@ -102,6 +102,7 @@
 	 :column-align (cons :left (loop repeat (length exercises) collect :right)))))
 
 (defun max-reps (log)
+  "Calculate a max rep list for logbook"
   (let ((max-weights (make-array 20 :element-type 'float :initial-element 0.0)))
 	(loop
 	  for training in log
@@ -116,3 +117,20 @@
 					   do (setf (aref max-weights (1- i))
 								(set-weight set))))))
 	max-weights))
+
+(defun transpose (list-of-lists)
+  (apply #'mapcar #'list list-of-lists))
+
+(defun print-max-reps (stream log name)
+  (let ((max-reps (exercise-max-reps log name)))
+	(format-table
+	 stream
+	 (transpose (list (loop for i from 1 to 20 collect i)
+					  (coerce max-reps 'list)))
+	 :column-label (list "Reps" "Max Weight")
+	 :column-align (list :right :right))))
+
+(defun exercise-max-reps (log name)
+  "Load default data and create a max rep weight list for one exercise"
+  (max-reps (filter-log log
+						:exercise #'(lambda (ex) (string= name (exercise-name ex))))))
