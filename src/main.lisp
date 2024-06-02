@@ -125,7 +125,7 @@
   (let ((max-reps (exercise-max-reps log name)))
 	(format-table
 	 stream
-	 (transpose (list (loop for i from 1 to 20 collect i)
+	 (transpose (list (loop for i from 1 for j across max-reps collect i)
 					  (coerce max-reps 'list)))
 	 :column-label (list "Reps" "Max Weight")
 	 :column-align (list :right :right))))
