@@ -122,6 +122,7 @@
   (apply #'mapcar #'list list-of-lists))
 
 (defun print-max-reps (stream log name)
+  "Print table of maximum weight by reps (1,2,...)"
   (let ((max-reps (exercise-max-reps log name)))
 	(format-table
 	 stream
@@ -129,6 +130,12 @@
 					  (coerce max-reps 'list)))
 	 :column-label (list "Reps" "Max Weight")
 	 :column-align (list :right :right))))
+
+(defun print-max-reps-default (stream name)
+  "Print table of maximum weight with default file"
+  (ensure-alias-db)
+  (let ((log (normalize-exercise-names (load-parse-training))))
+	(print-max-reps stream log name)))
 
 (defun exercise-max-reps (log name)
   "Load default data and create a max rep weight list for one exercise"
