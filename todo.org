@@ -1,7 +1,8 @@
 * Todo
 ** DONE Proper date data type/ library
 CLOSED: [2024-03-30 Sa 13:10]
-** TODO Structured (beautified/ tabularized) output
+** DONE Structured (beautified/ tabularized) output
+CLOSED: [2024-08-18 So 11:50]
 ** DONE Structured output in input format
 CLOSED: [2024-04-13 Sa 17:35]
 ** TODO Set combining/ exploding library
@@ -20,6 +21,7 @@ CLOSED: [2024-04-01 Mo 20:40]
 CLOSED: [2024-04-04 Do 07:09]
 ** DONE Basic reporting
 CLOSED: [2024-04-13 Sa 17:35]
+** TODO Group by time unit (e.g. week tonnage)
 * Reports
 ** 1rm per exercise over time
 *** All time
