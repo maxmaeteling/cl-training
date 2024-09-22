@@ -126,11 +126,6 @@
 	for exercise-name in exercises
 	collect (max-reps log)))
 
-(defun max-reps-exercises (log exercises)
-  (loop
-	for exercise-name in exercises
-	collect (max-reps log)))
-
 (defun listify (maybe-list)
   (if (consp maybe-list)
 	  maybe-list
