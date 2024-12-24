@@ -135,7 +135,9 @@
   "Print table of maximum weight by reps (1,2,...)"
   (loop
 	for name in (listify names)
-	collect (coerce (exercise-max-reps log name) 'list) into maxes
+	collect (mapcar #'(lambda (x) (format nil "~,2f" x))
+					(coerce (exercise-max-reps log name) 'list))
+	  into maxes
 	collect name into labels
 	collect :right into alignments
 	finally (format-table
@@ -149,7 +151,7 @@
   "Print table of maximum weight with default file"
   (ensure-alias-db)
   (let ((log (normalize-exercise-names (load-parse-training))))
-	(print-max-reps-multiple stream log names)))
+	(print-max-reps stream log names)))
 
 (defun exercise-max-reps (log name)
   "Load default data and create a max rep weight list for one exercise"
