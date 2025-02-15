@@ -18,6 +18,7 @@
    :exercise-sets
    :set-reps
    :set-number))
+
 (in-package :cl-training.classes)
 
 (defclass training ()

@@ -1,3 +1,12 @@
+* Cl Training revised
+** Set-types: bw/ weight/ bw+additional weight
+** Metrics
+*** Last N trainings
+*** Max reps per exercise
+*** 1 rm over time
+*** Tonnage over time
+**** Training
+**** Week
 * Todo
 ** DONE Proper date data type/ library
 CLOSED: [2024-03-30 Sa 13:10]
@@ -22,6 +31,7 @@ CLOSED: [2024-04-04 Do 07:09]
 ** DONE Basic reporting
 CLOSED: [2024-04-13 Sa 17:35]
 ** TODO Group by time unit (e.g. week tonnage)
+** TODO HTML report + deployment
 * Reports
 ** 1rm per exercise over time
 *** All time

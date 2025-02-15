@@ -35,7 +35,10 @@
 	finally (return alias-hash)))
 
 (defun normalize-exercise-name (name &optional (db *alias-db*))
-  (gethash name db))
+  (multiple-value-bind (ret found) (gethash name db)
+	(if found
+		ret
+		(format nil "NOT NORMALIZED ~a" name))))
 
 (defun ensure-alias-db ()
   (when (not *alias-db*)

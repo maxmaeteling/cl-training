@@ -34,10 +34,12 @@
   (=comma-separated #'=float))
 
 (defun =set-only-reps ()
+  "Parse input: 3,4,5"
   (=transform (=comma-separated-ints)
 			  #'(lambda (reps) (list (make-exercise-set reps)))))
 
 (defun =set-reps-weights ()
+  "Parse input: 3,4*50,60,70"
   (=destructure (reps weights)
 				(=list (=comma-separated-ints)
 					   (=destructure (_ weights)
@@ -53,6 +55,7 @@
 		  (cartesian-product reps weights)))
 
 (defun =set-sets-reps-weights ()
+  "Parse input: 1,2*3,4*50,60,70"
   (=destructure (sets rw)
 				(=list (=transform (=list (=comma-separated-ints)
 										  (?eq #\*))

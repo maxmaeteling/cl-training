@@ -157,3 +157,18 @@
   "Load default data and create a max rep weight list for one exercise"
   (max-reps (filter-log log
 						:exercise #'(lambda (ex) (string= name (exercise-name ex))))))
+
+(defun export-aliases (&optional (s t))
+  (let ((aliases (load-parse-aliases)))
+	(loop
+	  for (exercise . aliases) in aliases
+	  do (format s "~&~%(def-exercise \"~a\" 
+:aliases '(~{\"~a\" ~})
+:base 0)" exercise aliases))))
+
+(defun create-alias-sexp-file (path)
+  (with-open-file (str path
+					   :direction :output 
+                       :if-exists :supersede
+                       :if-does-not-exist :create)
+	(export-aliases str)))
