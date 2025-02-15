@@ -160,6 +160,7 @@
 
 (defun export-aliases (&optional (s t))
   (let ((aliases (load-parse-aliases)))
+	(format s "(in-package :cl-training)")
 	(loop
 	  for (exercise . aliases) in aliases
 	  do (format s "~&~%(def-exercise \"~a\" 

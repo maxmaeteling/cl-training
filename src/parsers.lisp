@@ -20,12 +20,7 @@
    #'parse-number:parse-number))
 
 (defun =comma-separated (fn)
-  (=destructure (f l)
-				(=list (funcall fn)
-					   (%any (=destructure (_ n) (=list (?eq #\,)
-														(funcall fn))
-							   n)))
-	(cons f l)))
+  (=separated fn #'(lambda () (?eq #\,))))
 
 (defun =comma-separated-ints ()
   (=comma-separated #'=int))
