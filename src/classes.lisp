@@ -33,7 +33,7 @@
     (with-accessors ((date training-date)
                      (exercises training-exercises))
         obj
-      (format stream "~a, exercises: ~a" date exercises))))
+      (format stream "~&~a, ~&~a" date exercises))))
 
 (defclass exercise ()
   ((name :initarg :name :accessor exercise-name)

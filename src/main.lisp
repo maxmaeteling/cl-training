@@ -2,7 +2,7 @@
   (:use
    :cl
    :cl-training.plots
-   :cl-training.log
+   :cl-training.log-new
    :cl-training.print
    :cl-training.classes
    :local-time))
@@ -11,7 +11,7 @@
 
 (defun regenerate-plots ()
   (ensure-alias-db)
-  (let* ((log-unfiltered (normalize-exercise-names (load-parse-training)))
+  (let* ((log-unfiltered (load-parse-training))
 		 (log (filter-log log-unfiltered
 						  :training #'(lambda (tr)
 										(timestamp< (adjust-timestamp (now)
@@ -55,7 +55,7 @@
   (ensure-alias-db)
   (output-readable
    (trainings-1rms
-	(filter-log (normalize-exercise-names (load-parse-training))
+	(filter-log (load-parse-training)
 				:exercise #'(lambda (ex) (string= exercise-name
 												  (exercise-name ex)))))
    t))
@@ -64,7 +64,7 @@
   (ensure-alias-db)
   (output-readable
    (trainings-tonnage
-	(filter-log (normalize-exercise-names (load-parse-training))
+	(filter-log (load-parse-training)
 				:exercise #'(lambda (ex) (string= exercise-name
 												  (exercise-name ex)))))
    t))
@@ -72,12 +72,12 @@
 (defun print-log ()
   (ensure-alias-db)
   (output-readable
-   (normalize-exercise-names (load-parse-training))
+   (load-parse-training)
    t))
 
 (defun print-1rm-table (stream exercises)
   (let ((log (trainings-1rms
-			  (filter-log (normalize-exercise-names (load-parse-training))
+			  (filter-log (load-parse-training)
 						  :exercise #'(lambda (ex) (member (exercise-name ex)
 														   exercises :test #'string=))))))
 	(format-table
@@ -150,7 +150,7 @@
 (defun print-max-reps-default (stream names)
   "Print table of maximum weight with default file"
   (ensure-alias-db)
-  (let ((log (normalize-exercise-names (load-parse-training))))
+  (let ((log (load-parse-training)))
 	(print-max-reps stream log names)))
 
 (defun exercise-max-reps (log name)

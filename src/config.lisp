@@ -6,7 +6,8 @@
    #:*program-path*
    #:*alias-path*
    #:*images-path*
-   #:*alias-db*))
+   #:*alias-db*
+   #:*Exercises*))
 
 (in-package :cl-training.config)
 
@@ -19,3 +20,5 @@
 (defparameter *images-path* (merge-pathnames #p"output/images/" *path*))
 
 (defparameter *alias-db* nil)
+
+(defparameter *exercises* nil)

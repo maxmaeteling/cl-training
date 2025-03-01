@@ -50,6 +50,19 @@ CLOSED: [2024-04-13 Sa 17:35]
 *** Week
 *** Month
 * Data structures
+** set bw
+| Expr  | Meaning      |
+|-------+--------------|
+| 5     | 1*5*bw       |
+| 5,6   | 5*bw,6*bw    |
+| 4*5   | 4*5*bw       |
+| 4*5*6 | 4*5*(+ bw 6) |
+** set numeric
+| Expr  | Meaning |
+|-------+---------|
+| 5     | 1*1*5   |
+| 5*6   | 1*5*6   |
+| 4*5*6 | 4*5*6   |
 ** Sets
 # Only reps
 #(0 7 0)
