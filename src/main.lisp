@@ -5,6 +5,7 @@
    :cl-training.log-new
    :cl-training.print
    :cl-training.classes
+   :cl-training.helpers
    :local-time))
 
 (in-package :cl-training)
@@ -68,6 +69,24 @@
 				:exercise #'(lambda (ex) (string= exercise-name
 												  (exercise-name ex)))))
    t))
+
+(defun print-weekly-tonnage (exercise-name)
+    (ensure-alias-db)
+  (format-table t
+				(hash-table-list
+				 (collate 
+				  (trainings-tonnage 
+				   (filter-log (load-parse-training)
+							   :exercise #'(lambda (ex) (string= exercise-name
+																 (exercise-name ex)))))
+				  :key #'(lambda (training) (format-timestring nil (training-date training)
+															   :format '(:year "-" :iso-week-number)))
+				  :value #'(lambda (training) (set-weight (first (exercise-sets (first (training-exercises training))))))
+				  :merger #'+
+				  :test #'equal
+				  :default 0))
+				:column-label '("Week" "Tonnage")
+				:column-align '(:left :right)))
 
 (defun print-log ()
   (ensure-alias-db)

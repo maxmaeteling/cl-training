@@ -7,7 +7,7 @@
    #:*alias-path*
    #:*images-path*
    #:*alias-db*
-   #:*Exercises*))
+   #:*exercises*))
 
 (in-package :cl-training.config)
 

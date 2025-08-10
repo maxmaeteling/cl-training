@@ -100,6 +100,10 @@
   :aliases '("lying tricps extension" "lte" )
   :base 0)
 
+(def-exercise "floor lying dumbbell triceps extension" 
+  :aliases '("DB floor LTE" "floor lte")
+  :base 0)
+
 (def-exercise "one hand rows" 
   :aliases '()
   :base 0)
@@ -153,9 +157,17 @@
   :base 0)
 
 (def-exercise "low bar squat" 
-  :aliases '("sq" "squat" "lowbar" "lowbar squat" "speed sq" )
+  :aliases '("sq" "squat" "lowbar" "lowbar squat" "speed sq" "speed safety sq" "speed ssq")
   :base 0)
 
 (def-exercise "hang clean" 
   :aliases '()
   :base 0)
+
+(def-exercise "reverse hyperextensions" 
+  :aliases '("reverse hyperext")
+  :base 0)
+
+(def-exercise "vertical jumps" 
+  :aliases '("plyo jumps")
+  :base :bw)

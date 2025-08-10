@@ -7,10 +7,15 @@
                 :components
                 ((:file "config")
 				 (:file "classes")
+				 (:file "parsers-new")
 				 (:file "parsers")
+				 (:file "exercise")
+				 (:file "exercise-definitions")
 				 (:file "log")
+				 (:file "log-new")
 				 (:file "print")
 				 (:file "plots")
+				 (:file "helpers")
 				 (:file "main"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-training/tests"))))
