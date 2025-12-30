@@ -105,16 +105,17 @@
 					(list (second set-expr)
 						  (reps (third set-expr))))
 		   :test #'equalp
-		   :merger #'(lambda (a b) (cond ((not a) b)
-										 ((or (not b)
-											  (> (weight (third a))
-												 (weight (third b)))
-											  (and (= (weight (third a))
-													  (weight (third b)))
-												   (timestamp> (first a)
-															   (first b))))
-										  a)
-										 (t b)))))
+		   :merger #'(lambda (a b)
+					   (cond ((not a) b)
+							 ((or (not b)
+								  (> (weight (third a))
+									 (weight (third b)))
+								  (and (= (weight (third a))
+										  (weight (third b)))
+									   (timestamp> (first a)
+												   (first b))))
+							  a)
+							 (t b)))))
 
 (defun exercise-last-date (log)
   (collate (flatten-log log)
@@ -123,16 +124,6 @@
 		   :test #'equalp
 		   :merger #'(lambda (a b) (if (timestamp> a b) a b))
 		   :default (unix-to-timestamp 0)))
-
-(defun timestamp-whole-week-difference (time-a time-b)
-  (truncate (/ (- (timestamp-to-unix time-a)
-				  (timestamp-to-unix time-b))
-			   (* 7 24 60 60))))
-
-(defun timestamp-short-date (stream ts)
-  (format-timestring stream
-					 ts
-					 :format '(:year "/" :month "/" :day)))
 
 (defun org-report (&optional (stream nil) (log (load-parse-training)))
   (let ((exercise-names (remove-duplicates
@@ -226,18 +217,10 @@
 								(weight set))))))
 	max-weights))
 
-(defun transpose (list-of-lists)
-  (apply #'mapcar #'list list-of-lists))
-
 (defun max-reps-exercises (log exercises)
   (loop
 	for exercise-name in exercises
 	collect (max-reps log)))
-
-(defun listify (maybe-list)
-  (if (consp maybe-list)
-	  maybe-list
-	  (list maybe-list)))
 
 (defun print-max-reps (stream log names)
   "Print table of maximum weight by reps (1,2,...)"
