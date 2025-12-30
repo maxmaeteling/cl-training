@@ -135,6 +135,7 @@
 	(princ 
 	 (with-output-to-string (s)
 	   (format s "* Training report~%")
+	   
 	   (format s "** Exercises alphabetic~%")
 	   (loop
 		 for ex in exercise-names
@@ -155,6 +156,7 @@
 							 (read-weight (third ex-max))
 							 (timestamp-short-date nil (first ex-max))))
 			  (format s "~%")))
+
 	   (format s "** Exercises recency~%")
 	   (let ((exercises-recency (sort (hash-table-to-list exercise-last-dates)
 									  #'timestamp>
