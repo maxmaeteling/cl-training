@@ -1,6 +1,6 @@
 (defpackage cl-training.plots
   (:use :cl :eazy-gnuplot :local-time :cl-training.classes :cl-training.config
-   :cl-training.parsers :cl-training.log)
+   :cl-training.parsers-new :cl-training.log-new)
   (:export
    :plot-time/values
    :exercise-plot-time/1rm
@@ -131,4 +131,4 @@
 	when (string= name (exercise-name exercise))
 	  maximize (loop
 				 for set in (exercise-sets exercise)
-				 maximize (cl-training.log:set-max-effort set))))
+				 maximize (cl-training.log-new:set-max-effort set))))

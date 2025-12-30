@@ -1,6 +1,8 @@
 (defpackage cl-training.parsers-new
   (:use :cl :maxpc :maxpc.digit :maxpc.char :parse-number :local-time)
-  (:export :=trainings))
+  (:export :=trainings
+		   :=separated-blocks
+		   :=training))
 (in-package :cl-training.parsers-new)
 
 (defun =int ()
@@ -28,6 +30,7 @@
   (%some (=transform (=list (funcall fn-x)
 							(%any (funcall fn-sep)))
 					 #'first)))
+
 (defun ?space ()
   (?eq #\ ))
 
@@ -41,7 +44,7 @@
   (=comma-separated #'=float))
 
 (defun =rest-of-line ()
-  (%any (%diff (?newline))))
+  (%any (?not (?newline))))
 
 (defun =set-expr ()
   (=transform
@@ -71,5 +74,19 @@
 					   (=separated #'=exercise #'?newline))
 	(list d e)))
 
-(defun =trainings ()
-  (=list (=separated #'=training #'?newline)))
+(defun ?double-newline ()
+  (?seq (?newline)
+		(?newline)))
+
+;; (defun =trainings ()
+;;   (=list (=separated #'=training #'?double-newline)))
+
+(defun =separated-blocks ()
+  (=destructure (first rest)
+				(=list
+				 (=subseq (%any (?not (?double-newline))))
+				 (%any (=transform (=list (%some (?double-newline))
+										  (%any (?newline))
+										  (=subseq (%any (?not (?double-newline)))))
+								   #'third)))
+	(cons first rest)))

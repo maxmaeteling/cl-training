@@ -1,6 +1,7 @@
 (defpackage cl-training
   (:use
    :cl
+   :cl-training.config
    :cl-training.plots
    :cl-training.log-new
    :cl-training.print
@@ -11,7 +12,6 @@
 (in-package :cl-training)
 
 (defun regenerate-plots ()
-  (ensure-alias-db)
   (let* ((log-unfiltered (load-parse-training))
 		 (log (filter-log log-unfiltered
 						  :training #'(lambda (tr)
@@ -19,7 +19,7 @@
 													  (offset :year -1))
 													(training-date tr))))))
 	(let ((exercises '("Low Bar Squat"
-					   "Deadlifts"
+					   "Deadlift"
 					   "Press"
 					   "Bench Press"
 					   "Power Clean")))
@@ -53,7 +53,6 @@
 								   "comparison_tonnage.png"))))
 
 (defun print-exercise-1rms (exercise-name)
-  (ensure-alias-db)
   (output-readable
    (trainings-1rms
 	(filter-log (load-parse-training)
@@ -62,7 +61,6 @@
    t))
 
 (defun print-exercise-tonnage (exercise-name)
-  (ensure-alias-db)
   (output-readable
    (trainings-tonnage
 	(filter-log (load-parse-training)
@@ -71,25 +69,116 @@
    t))
 
 (defun print-weekly-tonnage (exercise-name)
-    (ensure-alias-db)
   (format-table t
 				(hash-table-list
 				 (collate 
 				  (trainings-tonnage 
 				   (filter-log (load-parse-training)
-							   :exercise #'(lambda (ex) (string= exercise-name
-																 (exercise-name ex)))))
-				  :key #'(lambda (training) (format-timestring nil (training-date training)
-															   :format '(:year "-" :iso-week-number)))
-				  :value #'(lambda (training) (set-weight (first (exercise-sets (first (training-exercises training))))))
+							   :exercise #'(lambda (ex)
+											 (string= exercise-name
+													  (exercise-name ex)))))
+				  :key #'(lambda (training)
+						   (format-timestring nil (training-date training)
+											  :format '(:year "-" :iso-week-number)))
+				  :value #'(lambda (training)
+							 (weight (first (exercise-sets (first (training-exercises training))))))
 				  :merger #'+
 				  :test #'equal
 				  :default 0))
 				:column-label '("Week" "Tonnage")
 				:column-align '(:left :right)))
 
+(defun flatten-log (log)
+  (loop
+	for training in log
+	append (loop
+			 for exercise in (training-exercises training)
+			 append (loop
+					  for exercise-set in (exercise-sets exercise)
+					  collect (list (training-date training)
+									(exercise-name exercise)
+									exercise-set)))))
+
+(defun exercise-max-reps-all (log)
+  (collate (flatten-log log)
+		   :key #'(lambda (set-expr)
+					(list (second set-expr)
+						  (reps (third set-expr))))
+		   :test #'equalp
+		   :merger #'(lambda (a b) (cond ((not a) b)
+										 ((or (not b)
+											  (> (weight (third a))
+												 (weight (third b)))
+											  (and (= (weight (third a))
+													  (weight (third b)))
+												   (timestamp> (first a)
+															   (first b))))
+										  a)
+										 (t b)))))
+
+(defun exercise-last-date (log)
+  (collate (flatten-log log)
+		   :key #'second
+		   :value #'first
+		   :test #'equalp
+		   :merger #'(lambda (a b) (if (timestamp> a b) a b))
+		   :default (unix-to-timestamp 0)))
+
+(defun timestamp-whole-week-difference (time-a time-b)
+  (truncate (/ (- (timestamp-to-unix time-a)
+				  (timestamp-to-unix time-b))
+			   (* 7 24 60 60))))
+
+(defun timestamp-short-date (stream ts)
+  (format-timestring stream
+					 ts
+					 :format '(:year "/" :month "/" :day)))
+
+(defun org-report (&optional (stream nil) (log (load-parse-training)))
+  (let ((exercise-names (remove-duplicates
+						 (sort (copy-seq (mapcar #'second (flatten-log log)))
+							   #'string<)
+						 :test #'string=))
+		(exercise-last-dates (exercise-last-date log))
+		(exercise-max-reps (exercise-max-reps-all log)))
+	(princ 
+	 (with-output-to-string (s)
+	   (format s "* Training report~%")
+	   (format s "** Exercises alphabetic~%")
+	   (loop
+		 for ex in exercise-names
+		 do (progn
+			  (format s "*** ~a~%" (string-capitalize ex))
+			  (format s "Last training: ~a (~d week(s) ago)~%~%"
+					  (timestamp-short-date nil (gethash ex exercise-last-dates))
+					  (timestamp-whole-week-difference (now)
+													   (gethash ex exercise-last-dates)))
+			  (format s "**** Max reps~%")
+			  (format s "| RM | Weight | Date |~%")
+			  (loop
+				for n from 1 to 5
+				for ex-max = (gethash (list ex n) exercise-max-reps)
+				when ex-max
+				  do (format s "|  ~a | ~a | ~a |~%"
+							 n
+							 (read-weight (third ex-max))
+							 (timestamp-short-date nil (first ex-max))))
+			  (format s "~%"))))
+	 stream)))
+
+(defun org-report-to-file (&optional (path *org-report-path*))
+  (with-open-file (output-stream path :direction :output :if-does-not-exist :create :if-exists :overwrite)
+	(org-report output-stream)))
+
+(defun exercise-names-counts (log)
+  (loop
+	with count = (make-hash-table :test #'equalp)
+	for training in log
+	do (loop for exercise in (training-exercises training)
+			 do (incf (gethash (exercise-name exercise) count 0)))
+	finally (return (hash-table-list count))))
+
 (defun print-log ()
-  (ensure-alias-db)
   (output-readable
    (load-parse-training)
    t))
@@ -113,7 +202,7 @@
 										 for training-exercise in (training-exercises training)
 										 when (string= exercise
 													   (exercise-name training-exercise))
-										   do (return (set-weight (first (exercise-sets training-exercise)))))
+										   do (return (weight (first (exercise-sets training-exercise)))))
 									   0)))
 						  exercises)))
 			 log)
@@ -130,11 +219,11 @@
 		   do (loop
 				for set in (exercise-sets exercise)
 				do (loop
-					 for i from 1 to (min 20 (set-reps set))
+					 for i from 1 to (min 20 (reps set))
 					 when (< (aref max-weights (1- i))
-							 (set-weight set))
+							 (weight set))
 					   do (setf (aref max-weights (1- i))
-								(set-weight set))))))
+								(weight set))))))
 	max-weights))
 
 (defun transpose (list-of-lists)
@@ -168,7 +257,6 @@
 
 (defun print-max-reps-default (stream names)
   "Print table of maximum weight with default file"
-  (ensure-alias-db)
   (let ((log (load-parse-training)))
 	(print-max-reps stream log names)))
 
@@ -176,19 +264,3 @@
   "Load default data and create a max rep weight list for one exercise"
   (max-reps (filter-log log
 						:exercise #'(lambda (ex) (string= name (exercise-name ex))))))
-
-(defun export-aliases (&optional (s t))
-  (let ((aliases (load-parse-aliases)))
-	(format s "(in-package :cl-training)")
-	(loop
-	  for (exercise . aliases) in aliases
-	  do (format s "~&~%(def-exercise \"~a\" 
-:aliases '(~{\"~a\" ~})
-:base 0)" exercise aliases))))
-
-(defun create-alias-sexp-file (path)
-  (with-open-file (str path
-					   :direction :output 
-                       :if-exists :supersede
-                       :if-does-not-exist :create)
-	(export-aliases str)))

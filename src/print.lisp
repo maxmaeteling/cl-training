@@ -7,7 +7,7 @@
 
 (in-package :cl-training.print)
 
-(defconstant +CELL-FORMATS+ '(:left   "~vA"
+(defparameter +CELL-FORMATS+ '(:left   "~vA"
                               :center "~v:@<~A~>"
                               :right  "~v@A"))
 
@@ -19,13 +19,13 @@
 											  '(:day 2))))
 
 (defmethod output-set-readable (stream (set exercise-set))
-  (format stream "~{~d~^,~}" (set-reps set)))
+  (format stream "~{~d~^,~}" (reps set)))
 
 (defmethod output-set-readable (stream (set set-weight))
-  (format stream "~d*~f" (set-reps set) (set-weight set)))
+  (format stream "~d*~f" (reps set) (weight set)))
 
 (defmethod output-set-readable (stream (set multi-set-weight))
-  (format stream "~d*~d*~f" (set-number set) (set-reps set) (set-weight set)))
+  (format stream "~d*~d*~f" (num set) (reps set) (weight set)))
 
 (defun output-exercise-readable (stream exercise)
   (format stream
