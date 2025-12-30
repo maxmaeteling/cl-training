@@ -1,7 +1,7 @@
 (defpackage cl-training.log-new
   (:use :cl :cl-training.config :cl-training.classes :cl-training.parsers-new :local-time :maxpc)
   (:export
-   :load-parse-training
+   :read-parse-log
    :filter-log
    :trainings-1rms
    :set-max-effort
@@ -10,7 +10,7 @@
 
 (in-package :cl-training.log-new)
 
-(defun load-parse-training (&optional (path *log-path*))
+(defun read-parse-log (&optional (path *log-path*))
   (process-log-expr
    (with-open-file (s path)
 	 (mapcar #'(lambda (x) (parse x (=training)))
@@ -41,7 +41,7 @@
 										(process-set-expr name set))
 									sets))))))
 
-(defun process-log-expr (&optional (log (load-parse-training)))
+(defun process-log-expr (&optional (log (read-parse-log)))
   (loop
 	for (date exercises) in log
 	collect (make-training date (mapcar #'process-exercise-expr exercises))))

@@ -3,7 +3,7 @@
   (:export
    #:collate
    #:merge-adjoin
-   #:hash-table-list
+   #:hash-table-to-list
    #:listify
    #:timestamp-whole-week-difference
    #:timestamp-short-date
@@ -33,7 +33,7 @@
 	  (list x)
 	  x))
 
-(defun hash-table-list (hash)
+(defun hash-table-to-list (hash)
   (loop for k being the hash-keys of hash using (hash-value v) collect (list k v)))
 
 (defun hash-table-rows (hash)

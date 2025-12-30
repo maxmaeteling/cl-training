@@ -12,7 +12,7 @@
 (in-package :cl-training)
 
 (defun regenerate-plots ()
-  (let* ((log-unfiltered (load-parse-training))
+  (let* ((log-unfiltered (read-parse-log))
 		 (log (filter-log log-unfiltered
 						  :training #'(lambda (tr)
 										(timestamp< (adjust-timestamp (now)
@@ -55,7 +55,7 @@
 (defun print-exercise-1rms (exercise-name)
   (output-readable
    (trainings-1rms
-	(filter-log (load-parse-training)
+	(filter-log (read-parse-log)
 				:exercise #'(lambda (ex) (string= exercise-name
 												  (exercise-name ex)))))
    t))
@@ -63,17 +63,17 @@
 (defun print-exercise-tonnage (exercise-name)
   (output-readable
    (trainings-tonnage
-	(filter-log (load-parse-training)
+	(filter-log (read-parse-log)
 				:exercise #'(lambda (ex) (string= exercise-name
 												  (exercise-name ex)))))
    t))
 
 (defun print-weekly-tonnage (exercise-name)
   (format-table t
-				(hash-table-list
+				(hash-table-to-list
 				 (collate 
 				  (trainings-tonnage 
-				   (filter-log (load-parse-training)
+				   (filter-log (read-parse-log)
 							   :exercise #'(lambda (ex)
 											 (string= exercise-name
 													  (exercise-name ex)))))
@@ -125,7 +125,7 @@
 		   :merger #'(lambda (a b) (if (timestamp> a b) a b))
 		   :default (unix-to-timestamp 0)))
 
-(defun org-report (&optional (stream nil) (log (load-parse-training)))
+(defun org-report (&optional (stream nil) (log (read-parse-log)))
   (let ((exercise-names (remove-duplicates
 						 (sort (copy-seq (mapcar #'second (flatten-log log)))
 							   #'string<)
@@ -154,11 +154,27 @@
 							 n
 							 (read-weight (third ex-max))
 							 (timestamp-short-date nil (first ex-max))))
-			  (format s "~%"))))
+			  (format s "~%")))
+	   (format s "** Exercises recency~%")
+	   (let ((exercises-recency (sort (hash-table-to-list exercise-last-dates)
+									  #'timestamp>
+									  :key #'second)))
+		 (loop
+		   for (ex date) in exercises-recency
+		   do (progn
+				(format s "*** ~a(~d week(s) ago) ~%"
+						(string-capitalize ex)
+						(timestamp-whole-week-difference (now)
+														 (gethash ex exercise-last-dates)))
+				(format s "Last training: ~a~%~%"
+						(timestamp-short-date nil (gethash ex exercise-last-dates)))))))
 	 stream)))
 
 (defun org-report-to-file (&optional (path *org-report-path*))
-  (with-open-file (output-stream path :direction :output :if-does-not-exist :create :if-exists :overwrite)
+  (with-open-file (output-stream path
+								 :direction :output
+								 :if-does-not-exist :create
+								 :if-exists :overwrite)
 	(org-report output-stream)))
 
 (defun exercise-names-counts (log)
@@ -167,16 +183,16 @@
 	for training in log
 	do (loop for exercise in (training-exercises training)
 			 do (incf (gethash (exercise-name exercise) count 0)))
-	finally (return (hash-table-list count))))
+	finally (return (hash-table-to-list count))))
 
 (defun print-log ()
   (output-readable
-   (load-parse-training)
+   (read-parse-log)
    t))
 
 (defun print-1rm-table (stream exercises)
   (let ((log (trainings-1rms
-			  (filter-log (load-parse-training)
+			  (filter-log (read-parse-log)
 						  :exercise #'(lambda (ex) (member (exercise-name ex)
 														   exercises :test #'string=))))))
 	(format-table
@@ -240,7 +256,7 @@
 
 (defun print-max-reps-default (stream names)
   "Print table of maximum weight with default file"
-  (let ((log (load-parse-training)))
+  (let ((log (read-parse-log)))
 	(print-max-reps stream log names)))
 
 (defun exercise-max-reps (log name)
