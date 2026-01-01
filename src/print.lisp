@@ -34,10 +34,11 @@
 		  (mapcar #'(lambda (set) (output-set-readable nil set)) 
 				  (exercise-sets exercise))))
 
-(defun output-readable (log &optional (stream nil))
+(defun output-readable (log &optional (stream nil) (level 0))
   (loop
 	for training in log
-	do (progn (format stream "~&")
+	do (progn (format stream "~&~a " (coerce (loop repeat level collect #\*)
+											'string))
 			  (output-date stream (training-date training))
 			  (format stream "~&")
 			  (mapcar #'(lambda (ex) (output-exercise-readable stream ex))

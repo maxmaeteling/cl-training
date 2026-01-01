@@ -158,18 +158,26 @@
 			  (format s "~%")))
 
 	   (format s "** Exercises recency~%")
-	   (let ((exercises-recency (sort (hash-table-to-list exercise-last-dates)
-									  #'timestamp>
-									  :key #'second)))
-		 (loop
-		   for (ex date) in exercises-recency
-		   do (progn
-				(format s "*** ~a(~d week(s) ago) ~%"
-						(string-capitalize ex)
-						(timestamp-whole-week-difference (now)
-														 (gethash ex exercise-last-dates)))
-				(format s "Last training: ~a~%~%"
-						(timestamp-short-date nil (gethash ex exercise-last-dates)))))))
+	   (loop
+		 with exercises-recency = (sort (hash-table-to-list exercise-last-dates)
+										#'timestamp>
+										:key #'second)
+		 for (ex date) in exercises-recency
+		 do (progn
+			  (format s "*** ~a(~d week(s) ago) ~%"
+					  (string-capitalize ex)
+					  (timestamp-whole-week-difference (now) date))
+			  (format s "Last training: ~a~%~%"
+					  (timestamp-short-date nil date))))
+
+	   (format s "** Last half year~%")
+	   (output-readable (filter-log log
+									:training #'(lambda (tr)
+												  (timestamp< (adjust-timestamp (now)
+																(offset :month -6))
+															  (training-date tr))))
+						s
+						3))
 	 stream)))
 
 (defun org-report-to-file (&optional (path *org-report-path*))
