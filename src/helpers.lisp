@@ -47,4 +47,4 @@
 (defun timestamp-short-date (stream ts)
   (format-timestring stream
 					 ts
-					 :format '(:year "/" :month "/" :day)))
+					 :format '((:year 4) "/" (:month 2) "/" (:day 2))))

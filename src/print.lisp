@@ -37,8 +37,12 @@
 (defun output-readable (log &optional (stream nil) (level 0))
   (loop
 	for training in log
-	do (progn (format stream "~&~a " (coerce (loop repeat level collect #\*)
-											'string))
+	do (progn (format stream
+					  (if (> level 0)
+						  "~&~a "
+						  "~&")
+					  (coerce (loop repeat level collect #\*)
+							  'string))
 			  (output-date stream (training-date training))
 			  (format stream "~&")
 			  (mapcar #'(lambda (ex) (output-exercise-readable stream ex))
