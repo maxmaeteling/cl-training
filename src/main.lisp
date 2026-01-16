@@ -148,7 +148,7 @@
 			  (format s "**** Max reps~%")
 			  (format s "| RM | Weight | Date |~%")
 			  (loop
-				for n from 1 to 5
+				for n from 1 to 10
 				for ex-max = (gethash (list ex n) exercise-max-reps)
 				when ex-max
 				  do (format s "|  ~a | ~a | ~a |~%"
@@ -164,7 +164,7 @@
 										:key #'second)
 		 for (ex date) in exercises-recency
 		 do (progn
-			  (format s "*** ~a(~d week(s) ago) ~%"
+			  (format s "*** ~a (~d week(s) ago) ~%"
 					  (string-capitalize ex)
 					  (timestamp-whole-week-difference (now) date))
 			  (format s "Last training: ~a~%~%"

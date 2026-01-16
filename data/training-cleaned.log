@@ -2315,7 +2315,7 @@ vertical jump 5*45,60,75
 
 2025/02/23
 ssb low bar squat 10*2*120
-semi-sumo dl 6*2*117.5
+semi-sumo deadlift 6*2*117.5
 bench press 3*2*87.5
 chin up 5,2
 biceps curl 3*10*20
@@ -2329,7 +2329,7 @@ biceps curl 8,3,3*35
 
 2025/03/03
 ssb low bar squat 8*2*127.5
-semi-sumo dl 10*1*127.5
+semi-sumo deadlift 10*1*127.5
 bench press 3*8*75
 chin up 8,2,2
 dip 7,0,*12.5
@@ -2346,7 +2346,7 @@ plyo box jump 5*45,60,75,75
 
 2025/03/10
 ssb low bar squat 5*5*110
-semi-sumo dl 5*5*115
+semi-sumo deadlift 5*5*115
 bench press 3*5*85
 chin up 6,4,2
 dip 8,5,3
@@ -2360,7 +2360,7 @@ biceps curl 9,1,1*35
 
 2025/03/18
 ssb low bar squat 5*5*120
-semi-sumo dl 5*4*120
+semi-sumo deadlift 5*4*120
 bench press 3*2*90
 pull up 5,4,3
 dip 5,12,6,3
@@ -2375,7 +2375,7 @@ biceps curl 10,0,1*35
 
 2025/03/25
 ssb low bar squat 8*3*127.5
-semi-sumo dl 5*3*135
+semi-sumo deadlift 5*3*135
 bench press 8,8,7*77.5
 chin up 5,3,1
 
@@ -2388,7 +2388,7 @@ biceps curl 6,2,1
 
 2025/03/31
 ssb low bar squat 10*2*137.5
-semi-sumo dl 5*2*145
+semi-sumo deadlift 5*2*145
 bench press 3,2,1*87.5
 plyo box jump 5*60,75,75
 
@@ -2399,7 +2399,7 @@ deadlift 1*160 0*170
 
 2025/04/07
 ssb low bar squat 8*2*145
-semi-sumo dl 10*1*152.5
+semi-sumo deadlift 10*1*152.5
 bench press 2*80
 
 2025/04/10
@@ -2409,7 +2409,7 @@ chin up 10*1
 
 2025/04/14
 low bar squat 5*5*110
-semi-sumo dl 5*5*120
+semi-sumo deadlift 5*5*120
 bench press 8,8,6*77.5
 chin up 8*2 
 
@@ -2421,7 +2421,7 @@ chin up 7*3
 
 2025/04/21
 low bar squat 5*5*120
-semi-sumo dl 5*4*130
+semi-sumo deadlift 5*4*130
 bench press 12*3*60
 chin up 6*3 4*2
 
@@ -2461,12 +2461,12 @@ chin up 8,3,2
 
 2025/05/15
 low bar squat 5*5*110
-semi-sumo dl 3*5*120
+semi-sumo deadlift 3*5*120
 bench press 12*3*62.5
 
 2015/05/30
 low bar squat 4*5*110
-semi-sumo dl 5*2*120
+semi-sumo deadlift 5*2*120
 bench press 12*3*62.5
 chin up 8*3
 
@@ -2566,7 +2566,7 @@ facepull 12,9*25
 
 2025/08/18
 paused low bar squat 3*60 2*80,100 1*120,130,140,145,150,155
-one quarter deficit dl 3*5*135
+one quarter deficit deadlift 3*5*135
 incline bench press 3*40,50 1*55,60,65,67.5 0*70
 
 2025/08/25
@@ -2587,7 +2587,7 @@ biceps curl 5,1*35
 
 2025/08/31
 front low bar squat 4*4*60
-one quarter deficit dl 5*60 3*100 2*140 1*150,160,170,180
+one quarter deficit deadlift 5*60 3*100 2*140 1*150,160,170,180
 wide grip bench press 5*20 3*40 3*60 1*70,80,85,90,95 0*100
 leg curl 14,10,8*7
 leg extension 3*20*30
@@ -2804,3 +2804,38 @@ incline bench press 3*8*47.5
 iso lateral row 10,3,2*135
 press 9,4,2*45
 dips 10,5,2
+
+2026/01/05
+press 5*20 3*30 2*40 1*50,55,60,62.5,65 0*66 3*3*55
+2 inch block pulls 5*60 3*100 2*140 1*160,170,180,190 0*195
+box low bar squat 3*3*135
+
+2026/01/08
+low bar squat 8*2*132.5
+sumo deadlift 8*1*137.5
+chin up  7,4,2
+glute bridge 4*10*50
+kneeling leg curl 3*10*50
+leg extension 13,8,4*60
+biceps curl 8,4,1*35
+
+2026/01/10
+bench press 8*3*75
+incline bench press 3*8*48.5
+isolateral row 6,3,2*140
+press 8,2,2*46
+dips 8,4,3*5kg
+
+2026/01/12
+front sq 2*60,80 1*90,100,105 
+strapped front squat 2*60 1*80,90,100 6*1*80
+bench press 5*40 3*60 2*70 1*80,85,90,95,98.5 3*3*77.5
+romanian deadlift 3*5*140
+
+2026/01/16
+low bar squat 8*3*112.5
+sumo deadlift 8*2*120
+pull up 7,2,2
+leg extension 13,6,4*65
+kneeling leg curl 6,4,3*55
+biceps curl 9,4,2*35
