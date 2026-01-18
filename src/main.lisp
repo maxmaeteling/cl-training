@@ -24,7 +24,8 @@
 					 (list #'exercise-plot-time/1rm log-unfiltered "~a_1rm_all_time.png")
 					 (list #'exercise-plot-time/tonnage log "~a_tonnage.png"))
 		  do (mapcar #'(lambda (exercise)
-						 (funcall fn data
+						 (funcall fn
+								  data
 								  (string-downcase exercise)
 								  exercise
 								  (format nil file (string-downcase exercise))))
@@ -124,8 +125,32 @@
 		   :merger #'(lambda (a b) (if (timestamp> a b) a b))
 		   :default (unix-to-timestamp 0)))
 
-(defun org-report-rep-plot (reps-all ex n)
-  (gethash (list ex n) reps-all))
+(defun org-exercise-timeplots (exercises exercise-reps-all n-max)
+  (mapcar #'(lambda (ex)
+			  (multiple-value-bind (points n indices)
+				  (loop
+					for n from 1 to n-max
+					for ex-reps = (gethash (list ex n) exercise-reps-all)
+					for ex-print = (format nil "~{~{~a~^ ~}~^~%~}"
+									  (loop
+										for (date ex2 set) in ex-reps
+										collect (list (format nil "\"~a/~a\"" ex2 n)
+													  (date-gnuplot nil date)
+													  (weight set))))
+					when (consp ex-reps)
+					  collect ex-print
+						into ret
+					  and
+						sum 1 into n-indices
+					  and
+						collect n into indices
+					finally (return (values ret n-indices indices)))
+				(plot-time/stacked-values (output-image-path (format nil "reps/~a.png" ex))
+										  "Test"
+										  (format nil "~{~a~^~%~%~%~}" points)
+										  n
+										  indices)))
+		  exercises))
 
 (defun org-report (&optional (stream nil) (log (read-parse-log)))
   (labels ((exercise-detail (ex s exercise-last-dates exercise-max-reps)
@@ -143,13 +168,27 @@
 							n
 							(read-weight (third ex-max))
 							(timestamp-short-date nil (first ex-max))))
-			 (format s "~%")))
-	(let ((exercise-names (remove-duplicates
-						   (sort (copy-seq (mapcar #'second (flatten-log log)))
-								 #'string<)
-						   :test #'string=))
-		  (exercise-last-dates (exercise-last-date log))
-		  (exercise-max-reps (exercise-max-reps-all log)))
+			 (format s "~%")
+			 (format s "**** Plot~%")
+			 (format s "[[~a]]~%" (relative-image-path (format nil "reps/~a.png" ex)))))
+	(let* ((log-last-year (filter-log log
+									  :training #'(lambda (tr)
+													(timestamp< (adjust-timestamp (now)
+																  (offset :year -1))
+																(training-date tr)))))
+		   (exercise-names (remove-duplicates
+							(sort (copy-seq (mapcar #'second (flatten-log log)))
+								  #'string<)
+							:test #'string=))
+		   (exercise-last-dates (exercise-last-date log))
+		   (exercise-max-reps-all (exercise-max-reps-all log-last-year))
+		   (exercise-names-last-year (remove-duplicates
+									  (sort (copy-seq (mapcar #'second (flatten-log log-last-year)))
+											#'string<)
+									  :test #'string=))
+		   (exercise-reps-all (exercise-reps-all log-last-year)))
+	  (org-exercise-timeplots exercise-names-last-year exercise-reps-all 10)
+	  
 	  (princ 
 	   (with-output-to-string (s)
 		 (format s "* Training report~%")
@@ -159,7 +198,7 @@
 		   for ex in exercise-names
 		   do (progn
 				(format s "*** ~a~%" (string-capitalize ex))
-				(exercise-detail ex s exercise-last-dates exercise-max-reps)))
+				(exercise-detail ex s exercise-last-dates exercise-max-reps-all)))
 
 		 (format s "** Exercises recency~%")
 		 (loop
@@ -171,7 +210,7 @@
 				(format s "*** ~a (~d week(s) ago) ~%"
 						(string-capitalize ex)
 						(timestamp-whole-week-difference (now) date))
-				(exercise-detail ex s exercise-last-dates exercise-max-reps)))
+				(exercise-detail ex s exercise-last-dates exercise-max-reps-all)))
 
 		 (format s "** Last half year~%")
 		 (output-readable (filter-log log

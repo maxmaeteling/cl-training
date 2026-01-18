@@ -7,12 +7,19 @@
    :exercise-plot-time/1rms
    :exercise-plot-time/tonnage
    :exercise-plot-time/max-rm
-   :exercise-plot-time/tonnages))
+   :exercise-plot-time/tonnages
+   :date-gnuplot
+   :plot-time/stacked-values
+   :output-image-path
+   :relative-image-path))
 
 (in-package :cl-training.plots)
 
 (defun output-image-path (name)
   (merge-pathnames name *images-path*))
+
+(defun relative-image-path (name)
+  (merge-pathnames name  *images-path-relative*))
 
 (defun date-gnuplot (s date)
   (format-timestring s date :format '((:year 4) #\- (:month 2) #\- (:day 2))))
@@ -37,6 +44,29 @@
 		do (plot
 			#'data
 			:using (list 1 i) :title (nth (- i 2) data-titles)
+			:with '(:points :pt 7))))
+	output))
+
+(defun plot-time/stacked-values (output title data indices names &optional (debug nil))
+  (with-plots (s :debug debug)
+	(gp-setup :terminal '(png :size "1200,900") :output output)
+	(gp :set :xdata 'time)
+    (gp :set :timefmt "%Y-%m-%d")
+	(gp :set :format '(x "%m/%y"))
+	(gp :set :title title)
+	(gp :set :datafile '(:missing "0.0"))
+	(gp :set :grid :ytics)
+	(gp :set :key :left :top)
+	(flet ((provide-data ()
+			 (format s "~a" data)))
+	  (loop
+		for i from 0 below indices
+		for name in names
+		do (plot
+			#'provide-data
+			:index i
+			:using (list 2 3)
+			:title (format nil "~a reps" name)
 			:with '(:points :pt 7))))
 	output))
 
