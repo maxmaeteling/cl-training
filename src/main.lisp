@@ -126,59 +126,60 @@
 		   :default (unix-to-timestamp 0)))
 
 (defun org-report (&optional (stream nil) (log (read-parse-log)))
-  (let ((exercise-names (remove-duplicates
-						 (sort (copy-seq (mapcar #'second (flatten-log log)))
-							   #'string<)
-						 :test #'string=))
-		(exercise-last-dates (exercise-last-date log))
-		(exercise-max-reps (exercise-max-reps-all log)))
-	(princ 
-	 (with-output-to-string (s)
-	   (format s "* Training report~%")
-	   
-	   (format s "** Exercises alphabetic~%")
-	   (loop
-		 for ex in exercise-names
-		 do (progn
-			  (format s "*** ~a~%" (string-capitalize ex))
-			  (format s "Last training: ~a (~d week(s) ago)~%~%"
-					  (timestamp-short-date nil (gethash ex exercise-last-dates))
-					  (timestamp-whole-week-difference (now)
-													   (gethash ex exercise-last-dates)))
-			  (format s "**** Max reps~%")
-			  (format s "| RM | Weight | Date |~%")
-			  (loop
-				for n from 1 to 10
-				for ex-max = (gethash (list ex n) exercise-max-reps)
-				when ex-max
-				  do (format s "|  ~a | ~a | ~a |~%"
-							 n
-							 (read-weight (third ex-max))
-							 (timestamp-short-date nil (first ex-max))))
-			  (format s "~%")))
+  (labels ((exercise-detail (ex s exercise-last-dates exercise-max-reps)
+			 (format s "Last training: ~a (~d week(s) ago)~%~%"
+					 (timestamp-short-date nil (gethash ex exercise-last-dates))
+					 (timestamp-whole-week-difference (now)
+													  (gethash ex exercise-last-dates)))
+			 (format s "**** Max reps~%")
+			 (format s "| RM | Weight | Date |~%")
+			 (loop
+			   for n from 1 to 10
+			   for ex-max = (gethash (list ex n) exercise-max-reps)
+			   when ex-max
+				 do (format s "|  ~a | ~a | ~a |~%"
+							n
+							(read-weight (third ex-max))
+							(timestamp-short-date nil (first ex-max))))
+			 (format s "~%")))
+	(let ((exercise-names (remove-duplicates
+						   (sort (copy-seq (mapcar #'second (flatten-log log)))
+								 #'string<)
+						   :test #'string=))
+		  (exercise-last-dates (exercise-last-date log))
+		  (exercise-max-reps (exercise-max-reps-all log)))
+	  (princ 
+	   (with-output-to-string (s)
+		 (format s "* Training report~%")
+		 
+		 (format s "** Exercises alphabetic~%")
+		 (loop
+		   for ex in exercise-names
+		   do (progn
+				(format s "*** ~a~%" (string-capitalize ex))
+				(exercise-detail ex s exercise-last-dates exercise-max-reps)))
 
-	   (format s "** Exercises recency~%")
-	   (loop
-		 with exercises-recency = (sort (hash-table-to-list exercise-last-dates)
-										#'timestamp>
-										:key #'second)
-		 for (ex date) in exercises-recency
-		 do (progn
-			  (format s "*** ~a (~d week(s) ago) ~%"
-					  (string-capitalize ex)
-					  (timestamp-whole-week-difference (now) date))
-			  (format s "Last training: ~a~%~%"
-					  (timestamp-short-date nil date))))
+		 (format s "** Exercises recency~%")
+		 (loop
+		   with exercises-recency = (sort (hash-table-to-list exercise-last-dates)
+										  #'timestamp>
+										  :key #'second)
+		   for (ex date) in exercises-recency
+		   do (progn
+				(format s "*** ~a (~d week(s) ago) ~%"
+						(string-capitalize ex)
+						(timestamp-whole-week-difference (now) date))
+				(exercise-detail ex s exercise-last-dates exercise-max-reps)))
 
-	   (format s "** Last half year~%")
-	   (output-readable (filter-log log
-									:training #'(lambda (tr)
-												  (timestamp< (adjust-timestamp (now)
-																(offset :month -6))
-															  (training-date tr))))
-						s
-						3))
-	 stream)))
+		 (format s "** Last half year~%")
+		 (output-readable (filter-log log
+									  :training #'(lambda (tr)
+													(timestamp< (adjust-timestamp (now)
+																  (offset :month -6))
+																(training-date tr))))
+						  s
+						  3))
+	   stream))))
 
 (defun org-report-to-file (&optional (path *org-report-path*))
   (with-open-file (output-stream path

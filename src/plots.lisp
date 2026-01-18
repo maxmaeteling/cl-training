@@ -43,79 +43,56 @@
 (defun exercise-plot-time/max-rm (log exercise-name title file
 								  &key (training #'(lambda (x) (declare (ignore x)) t))
 									(exercise #'(lambda (x) (declare (ignore x)) t)))
-  (exercise-plot-time/max-rms log
-							  (list exercise-name)
-							  (list title)
-							  title
-							  file
-							  :training training
-							  :exercise exercise))
+  (exercise-plot-time/transform log #'identity (list exercise-name) (list title) title file
+								:training training :exercise exercise))
 
 (defun exercise-plot-time/1rm (log exercise-name title file
 							   &key (training #'(lambda (x) (declare (ignore x)) t))
 								 (exercise #'(lambda (x) (declare (ignore x)) t)))
-  (exercise-plot-time/1rms log
-						   (list exercise-name)
-						   (list title)
-						   title
-						   file
-						   :training training
-						   :exercise exercise))
+  (exercise-plot-time/transform log #'trainings-1rms (list exercise-name) (list title) title file
+								:training training :exercise exercise))
 
 (defun exercise-plot-time/tonnage (log exercise-name title file
 								   &key (training #'(lambda (x) (declare (ignore x)) t))
 									 (exercise #'(lambda (x) (declare (ignore x)) t)))
-  (exercise-plot-time/tonnages log
-							   (list exercise-name)
-							   (list title)
-							   title
-							   file
-							   :training training
-							   :exercise exercise))
+  (exercise-plot-time/transform log #'trainings-tonnage (list exercise-name) (list title) title file
+								:training training :exercise exercise))
 
 (defun exercise-plot-time/max-rms (log exercise-names exercise-titles title file
 								   &key (training #'(lambda (x) (declare (ignore x)) t))
 									 (exercise #'(lambda (x) (declare (ignore x)) t)))
-  (plot-time/values
-   (output-image-path file)
-   title
-   exercise-titles
-   (columnify exercise-names
-			  (filter-log 
-			   log
-			   :training training
-			   :exercise #'(lambda (ex) (and (funcall exercise ex)
-											 (member (exercise-name ex) exercise-names :test #'string=)))))))
+  (exercise-plot-time/transform log #'identity exercise-names exercise-titles title file
+								:training training :exercise exercise))
 
 (defun exercise-plot-time/1rms (log exercise-names exercise-titles title file
 								&key (training #'(lambda (x) (declare (ignore x)) t))
 								  (exercise #'(lambda (x) (declare (ignore x)) t)))
-  (plot-time/values
-   (output-image-path file)
-   title
-   exercise-titles
-   (columnify exercise-names
-			  (trainings-1rms
-			   (filter-log 
-				log
-				:training training
-				:exercise #'(lambda (ex) (and (funcall exercise ex)
-											  (member (exercise-name ex) exercise-names :test #'string=))))))))
+  (exercise-plot-time/transform log #'trainings-1rms exercise-names exercise-titles title file
+								:training training :exercise exercise))
 
 (defun exercise-plot-time/tonnages (log exercise-names exercise-titles title file
 									&key (training #'(lambda (x) (declare (ignore x)) t))
 									  (exercise #'(lambda (x) (declare (ignore x)) t)))
+  (exercise-plot-time/transform log #'trainings-tonnage exercise-names exercise-titles title file
+								:training training :exercise exercise))
+
+(defun exercise-plot-time/transform (log fn-transform exercise-names exercise-titles title file
+									 &key (training #'(lambda (x) (declare (ignore x)) t))
+									   (exercise #'(lambda (x) (declare (ignore x)) t)))
   (plot-time/values
    (output-image-path file)
    title
    exercise-titles
    (columnify exercise-names
-			  (trainings-tonnage
+			  (funcall
+			   fn-transform
 			   (filter-log
 				log
 				:training training
 				:exercise #'(lambda (ex) (and (funcall exercise ex)
-											  (member (exercise-name ex) exercise-names :test #'string=))))))))
+											  (member (exercise-name ex)
+													  exercise-names
+													  :test #'string=))))))))
 
 (defun columnify (exercise-names logbook)
   (loop
