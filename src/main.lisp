@@ -17,40 +17,28 @@
 						  :training #'(lambda (tr)
 										(timestamp< (adjust-timestamp (now)
 													  (offset :year -1))
-													(training-date tr))))))
-	(let ((exercises '("Low Bar Squat"
-					   "Deadlift"
-					   "Press"
-					   "Bench Press"
-					   "Power Clean")))
-	  (mapcar #'(lambda (exercise)
-				  (exercise-plot-time/1rm log
-										  (string-downcase exercise)
-										  exercise
-										  (format nil "~a_1rm_last_year.png" (string-downcase exercise))))
-			  exercises)
-	  (mapcar #'(lambda (exercise)
-				  (exercise-plot-time/1rm log-unfiltered
-										  (string-downcase exercise)
-										  exercise
-										  (format nil "~a_1rm_all_time.png" (string-downcase exercise))))
-			  exercises)
-	  (mapcar #'(lambda (exercise)
-				  (exercise-plot-time/tonnage log
-											  (string-downcase exercise)
-											  exercise
-											  (format nil "~a_tonnage.png" (string-downcase exercise))))
-			  exercises)
-	  (exercise-plot-time/1rms log
-							   (mapcar #'string-downcase exercises)
-							   exercises
-							   "1rm Comparison"
-							   "comparison_1rm.png")
-	  (exercise-plot-time/tonnages log
-								   (mapcar #'string-downcase exercises)
-								   exercises
-								   "Tonnage Comparison"
-								   "comparison_tonnage.png"))))
+													(training-date tr)))))
+		 (exercises '("Low Bar Squat" "Deadlift" "Press" "Bench Press" "Power Clean")))
+	(loop for (fn data file)
+			in (list (list #'exercise-plot-time/1rm log "~a_1rm_last_year.png")
+					 (list #'exercise-plot-time/1rm log-unfiltered "~a_1rm_all_time.png")
+					 (list #'exercise-plot-time/tonnage log "~a_tonnage.png"))
+		  do (mapcar #'(lambda (exercise)
+						 (funcall fn data
+								  (string-downcase exercise)
+								  exercise
+								  (format nil file (string-downcase exercise))))
+					 exercises))
+	(exercise-plot-time/1rms log
+							 (mapcar #'string-downcase exercises)
+							 exercises
+							 "1rm Comparison"
+							 "comparison_1rm.png")
+	(exercise-plot-time/tonnages log
+								 (mapcar #'string-downcase exercises)
+								 exercises
+								 "Tonnage Comparison"
+								 "comparison_tonnage.png")))
 
 (defun print-exercise-1rms (exercise-name)
   (output-readable
@@ -117,6 +105,17 @@
 							  a)
 							 (t b)))))
 
+(defun cons-rev (a b)
+  (cons b a))
+
+(defun exercise-reps-all (log)
+  (collate (flatten-log log)
+		   :key #'(lambda (set-expr)
+					(list (second set-expr)
+						  (reps (third set-expr))))
+		   :test #'equalp
+		   :merger #'cons-rev))
+
 (defun exercise-last-date (log)
   (collate (flatten-log log)
 		   :key #'second
@@ -124,6 +123,9 @@
 		   :test #'equalp
 		   :merger #'(lambda (a b) (if (timestamp> a b) a b))
 		   :default (unix-to-timestamp 0)))
+
+(defun org-report-rep-plot (reps-all ex n)
+  (gethash (list ex n) reps-all))
 
 (defun org-report (&optional (stream nil) (log (read-parse-log)))
   (labels ((exercise-detail (ex s exercise-last-dates exercise-max-reps)
