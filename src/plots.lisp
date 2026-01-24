@@ -67,48 +67,44 @@
 			:index i
 			:using (list 2 3)
 			:title (format nil "~a reps" name)
-			:with '(:points :pt 7))))
+			:with :steps)))
 	output))
 
+(defun t/ignore-1 (x)
+  (declare (ignore x)) t)
+
 (defun exercise-plot-time/max-rm (log exercise-name title file
-								  &key (training #'(lambda (x) (declare (ignore x)) t))
-									(exercise #'(lambda (x) (declare (ignore x)) t)))
+								  &key (training #'t/ignore-1) (exercise #'t/ignore-1))
   (exercise-plot-time/transform log #'identity (list exercise-name) (list title) title file
 								:training training :exercise exercise))
 
 (defun exercise-plot-time/1rm (log exercise-name title file
-							   &key (training #'(lambda (x) (declare (ignore x)) t))
-								 (exercise #'(lambda (x) (declare (ignore x)) t)))
+							   &key (training #'t/ignore-1) (exercise #'t/ignore-1))
   (exercise-plot-time/transform log #'trainings-1rms (list exercise-name) (list title) title file
 								:training training :exercise exercise))
 
 (defun exercise-plot-time/tonnage (log exercise-name title file
-								   &key (training #'(lambda (x) (declare (ignore x)) t))
-									 (exercise #'(lambda (x) (declare (ignore x)) t)))
+								   &key (training #'t/ignore-1) (exercise #'t/ignore-1))
   (exercise-plot-time/transform log #'trainings-tonnage (list exercise-name) (list title) title file
 								:training training :exercise exercise))
 
 (defun exercise-plot-time/max-rms (log exercise-names exercise-titles title file
-								   &key (training #'(lambda (x) (declare (ignore x)) t))
-									 (exercise #'(lambda (x) (declare (ignore x)) t)))
+								   &key (training #'t/ignore-1) (exercise #'t/ignore-1))
   (exercise-plot-time/transform log #'identity exercise-names exercise-titles title file
 								:training training :exercise exercise))
 
 (defun exercise-plot-time/1rms (log exercise-names exercise-titles title file
-								&key (training #'(lambda (x) (declare (ignore x)) t))
-								  (exercise #'(lambda (x) (declare (ignore x)) t)))
+								&key (training #'t/ignore-1) (exercise #'t/ignore-1))
   (exercise-plot-time/transform log #'trainings-1rms exercise-names exercise-titles title file
 								:training training :exercise exercise))
 
 (defun exercise-plot-time/tonnages (log exercise-names exercise-titles title file
-									&key (training #'(lambda (x) (declare (ignore x)) t))
-									  (exercise #'(lambda (x) (declare (ignore x)) t)))
+									&key (training #'t/ignore-1) (exercise #'t/ignore-1))
   (exercise-plot-time/transform log #'trainings-tonnage exercise-names exercise-titles title file
 								:training training :exercise exercise))
 
 (defun exercise-plot-time/transform (log fn-transform exercise-names exercise-titles title file
-									 &key (training #'(lambda (x) (declare (ignore x)) t))
-									   (exercise #'(lambda (x) (declare (ignore x)) t)))
+									 &key (training #'t/ignore-1) (exercise #'t/ignore-1))
   (plot-time/values
    (output-image-path file)
    title

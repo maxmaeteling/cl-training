@@ -152,7 +152,7 @@
 										  indices)))
 		  exercises))
 
-(defun org-report (&optional (stream nil) (log (read-parse-log)))
+(defun org-report (&key (stream nil) (log (read-parse-log)) (images t))
   (labels ((exercise-detail (ex s exercise-last-dates exercise-max-reps)
 			 (format s "Last training: ~a (~d week(s) ago)~%~%"
 					 (timestamp-short-date nil (gethash ex exercise-last-dates))
@@ -187,7 +187,8 @@
 											#'string<)
 									  :test #'string=))
 		   (exercise-reps-all (exercise-reps-all log-last-year)))
-	  (org-exercise-timeplots exercise-names-last-year exercise-reps-all 10)
+	  (when images
+		(org-exercise-timeplots exercise-names-last-year exercise-reps-all 10))
 	  
 	  (princ 
 	   (with-output-to-string (s)
