@@ -133,18 +133,18 @@
 					for n from 1 to n-max
 					for ex-reps = (gethash (list ex n) exercise-reps-all)
 					for ex-print = (format nil "~{~{~a~^ ~}~^~%~}"
-									  (loop
-										for (date ex2 set) in ex-reps
-										collect (list (format nil "\"~a/~a\"" ex2 n)
-													  (date-gnuplot nil date)
-													  (weight set))))
+										   (loop
+											 for (date ex2 set) in ex-reps
+											 collect (list (format nil "\"~a/~a\"" ex2 n)
+														   (date-gnuplot nil date)
+														   (weight set))))
 					when (consp ex-reps)
 					  collect ex-print
 						into ret
-					  and
-						sum 1 into n-indices
-					  and
-						collect n into indices
+						and
+						  sum 1 into n-indices
+						  and
+							collect n into indices
 					finally (return (values ret n-indices indices)))
 				(plot-time/stacked-values (output-image-path (format nil "reps/~a.png" ex))
 										  "Test"
@@ -153,13 +153,19 @@
 										  indices)))
 		  exercises))
 
+(defun org-headline (stream level text)
+  (format stream
+		  "~a ~a~%"
+		  (coerce (loop repeat level collect #\*) 'string)
+		  text))
+
 (defun org-report (&key (stream nil) (log (read-parse-log)) (images t))
   (labels ((exercise-detail (ex s exercise-last-dates exercise-max-reps)
 			 (format s "Last training: ~a (~d week(s) ago)~%~%"
 					 (timestamp-short-date nil (gethash ex exercise-last-dates))
 					 (timestamp-whole-week-difference (now)
 													  (gethash ex exercise-last-dates)))
-			 (format s "**** Max reps~%")
+			 (org-headline s 4 "Max reps")
 			 (loop
 			   for n from 1 to 10
 			   for ex-max = (gethash (list ex n) exercise-max-reps)
@@ -177,7 +183,7 @@
 			 
 			 
 			 (format s "~%")
-			 (format s "**** Plot~%")
+			 (org-headline s 4 "Plot")
 			 (format s "[[~a]]~%" (relative-image-path (format nil "reps/~a.png" ex)))))
 	(let* ((log-last-year (filter-log log
 									  :training #'(lambda (tr)
@@ -200,16 +206,17 @@
 	  
 	  (princ 
 	   (with-output-to-string (s)
-		 (format s "* Training report~%")
+		 (org-headline s 1 "Training report")
 		 
-		 (format s "** Exercises alphabetic~%")
+
+		 (org-headline s 2 "Exercises alphabetic")
 		 (loop
 		   for ex in exercise-names
 		   do (progn
 				(format s "*** ~a~%" (string-capitalize ex))
 				(exercise-detail ex s exercise-last-dates exercise-max-reps-all)))
 
-		 (format s "** Exercises recency~%")
+		 (org-headline s 2 "Exercises recency")
 		 (loop
 		   with exercises-recency = (sort (hash-table-to-list exercise-last-dates)
 										  #'timestamp>
@@ -221,7 +228,8 @@
 						(timestamp-whole-week-difference (now) date))
 				(exercise-detail ex s exercise-last-dates exercise-max-reps-all)))
 
-		 (format s "** Last half year~%")
+		 
+		 (org-headline s 2 "Last half year")
 		 (output-readable (filter-log log
 									  :training #'(lambda (tr)
 													(timestamp< (adjust-timestamp (now)
@@ -236,7 +244,7 @@
 								 :direction :output
 								 :if-does-not-exist :create
 								 :if-exists :overwrite)
-	(org-report output-stream)))
+	(org-report :stream output-stream)))
 
 (defun exercise-names-counts (log)
   (loop
