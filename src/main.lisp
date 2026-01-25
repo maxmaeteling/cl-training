@@ -75,7 +75,8 @@
 				  :test #'equal
 				  :default 0))
 				:column-label '("Week" "Tonnage")
-				:column-align '(:left :right)))
+				:column-align '(:left :right)
+				:header-sep nil))
 
 (defun flatten-log (log)
   (loop
@@ -159,15 +160,18 @@
 					 (timestamp-whole-week-difference (now)
 													  (gethash ex exercise-last-dates)))
 			 (format s "**** Max reps~%")
-			 (format s "| RM | Weight | Date |~%")
-			 (loop
-			   for n from 1 to 10
-			   for ex-max = (gethash (list ex n) exercise-max-reps)
-			   when ex-max
-				 do (format s "|  ~a | ~a | ~a |~%"
-							n
-							(read-weight (third ex-max))
-							(timestamp-short-date nil (first ex-max))))
+			 (format-table s
+						   (loop
+							 for n from 1 to 10
+							 for ex-max = (gethash (list ex n) exercise-max-reps)
+							 when ex-max
+							   collect (list n
+											 (read-weight (third ex-max))
+											 (timestamp-short-date nil (first ex-max))))
+						    :column-label '("RM" "Weight" "Date")
+							:column-align '(:right :right :left)
+							:header-sep nil)
+			 
 			 (format s "~%")
 			 (format s "**** Plot~%")
 			 (format s "[[~a]]~%" (relative-image-path (format nil "reps/~a.png" ex)))))

@@ -53,7 +53,8 @@
 (defun format-table (stream data &key (column-label (loop for i from 1 to (length (car data))
                                                           collect (format nil "COL~D" i)))
                                    (column-align (loop for i from 1 to (length (car data))
-                                                       collect :left)))
+                                                       collect :left))
+								   (header-sep t))
   (let* ((col-count (length column-label))
          (strtable (cons column-label	; table header
                          (loop for row in data ; table body with all cells as strings
@@ -71,18 +72,19 @@
                            finally (return widths))))
 										;------------------------------------------------------------------------------------
 										; splice in the header separator
-    (setq strtable
-          (nconc (list (car strtable)				   ; table header
-                       (loop for align in column-align ; generate separator
-                             for width across col-widths
-                             collect (case align
-                                       (:left   (format nil ":~v@{~A~:*~}"
-                                                        (1- width)  "-"))
-                                       (:right  (format nil "~v@{~A~:*~}:"
-                                                        (1- width)  "-"))
-                                       (:center (format nil ":~v@{~A~:*~}:"
-                                                        (- width 2) "-")))))
-                 (cdr strtable)))		; table body
+    (when header-sep
+	  (setq strtable
+			(nconc (list (car strtable)	; table header
+						 (loop for align in column-align ; generate separator
+							   for width across col-widths
+							   collect (case align
+										 (:left   (format nil ":~v@{~A~:*~}"
+														  (1- width)  "-"))
+										 (:right  (format nil "~v@{~A~:*~}:"
+														  (1- width)  "-"))
+										 (:center (format nil ":~v@{~A~:*~}:"
+														  (- width 2) "-")))))
+				   (cdr strtable))))		; table body
 										;------------------------------------------------------------------------------------
 										; Generate the formatted table
     (let ((row-fmt (format nil "| ~{~A~^ | ~} |~~%" ; compile the row format
