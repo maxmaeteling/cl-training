@@ -67,7 +67,7 @@
 			:index i
 			:using (list 2 3)
 			:title (format nil "~a reps" name)
-			:with :steps)))
+			:with '(:points :pt 7))))
 	output))
 
 (defun t/ignore-1 (x)

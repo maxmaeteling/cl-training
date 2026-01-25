@@ -60,11 +60,18 @@
 				 (%any (?seq (%maybe (%some (?whitespace)))
 							 (=word))))))
 
+(defun ?maybe-comment ()
+  (=subseq (%maybe (?seq (%any (?space))
+						 (?eq #\()
+						 (%any (?not (?eq #\))))
+						 (?eq #\))))))
+
 (defun =exercise ()
-  (=destructure (exercise _ sets)
+  (=destructure (exercise _ sets _)
 				(=list (=exercise-name)
 					   (%some (?whitespace))
-					   (=separated #'=set-expr #'?space))
+					   (=separated #'=set-expr #'?space)
+					   (?maybe-comment))
 	(list exercise sets)))
 
 (defun =training ()
