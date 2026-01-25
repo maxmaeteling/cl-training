@@ -160,17 +160,21 @@
 					 (timestamp-whole-week-difference (now)
 													  (gethash ex exercise-last-dates)))
 			 (format s "**** Max reps~%")
-			 (format-table s
-						   (loop
-							 for n from 1 to 10
-							 for ex-max = (gethash (list ex n) exercise-max-reps)
-							 when ex-max
-							   collect (list n
-											 (read-weight (third ex-max))
-											 (timestamp-short-date nil (first ex-max))))
-						    :column-label '("RM" "Weight" "Date")
-							:column-align '(:right :right :left)
-							:header-sep nil)
+			 (loop
+			   for n from 1 to 10
+			   for ex-max = (gethash (list ex n) exercise-max-reps)
+			   when ex-max
+				 collect (list n
+							   (read-weight (third ex-max))
+							   (timestamp-short-date nil (first ex-max)))
+				   into maxes
+			   finally (when maxes
+						 (format-table s
+									   maxes
+									   :column-label '("RM" "Weight" "Date")
+									   :column-align '(:right :right :left)
+									   :header-sep nil)))
+			 
 			 
 			 (format s "~%")
 			 (format s "**** Plot~%")
