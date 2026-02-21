@@ -207,7 +207,6 @@
 	  (princ 
 	   (with-output-to-string (s)
 		 (org-headline s 1 "Training report")
-		 
 
 		 (org-headline s 2 "Exercises alphabetic")
 		 (loop
