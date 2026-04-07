@@ -7,7 +7,15 @@
                 :components
                 ((:file "config")
 				 (:file "classes")
+<<<<<<< HEAD
 				 (:file "parsers-new")
+=======
+				 (:file "exercise")
+				 (:file "exercise-definitions")
+				 (:file "parsers-new")
+				 (:file "parsers")
+				 (:file "log")
+>>>>>>> 11e8897 (WIP)
 				 (:file "log-new")
 				 (:file "print")
 				 (:file "plots")

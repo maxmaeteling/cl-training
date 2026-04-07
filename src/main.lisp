@@ -6,10 +6,33 @@
    :cl-training.log-new
    :cl-training.print
    :cl-training.classes
+<<<<<<< HEAD
    :cl-training.helpers
+=======
+   :cl-who
+>>>>>>> 11e8897 (WIP)
    :local-time))
 
 (in-package :cl-training)
+
+(defmacro html-frame (title body)
+  `(progn
+	 (setf (html-mode) :html5)
+	 (with-html-output (s nil :prologue t)
+	   (:html (:title ,title) (:body ,body)))))
+
+(defun html-data-table (stream titles rows alignments)
+  (with-html-output (stream)
+	(:table (:tr (mapcar #'(lambda (c) (htm (:th (str c))))
+						 titles))
+			(mapcar #'(lambda (r)
+						(htm (:tr (mapcar #'(lambda (c) (htm (:td (str c))))
+										  r))))
+					rows))))
+
+(defun generate-html-report (&optional (path (output-image-path "index.html")))
+  (with-open-file (s path :direction :output :if-exists :supersede)
+	(html-frame "Testseite" "Testinhalt")))
 
 (defun regenerate-plots ()
   (let* ((log-unfiltered (read-parse-log))
@@ -330,4 +353,55 @@
 (defun exercise-max-reps (log name)
   "Load default data and create a max rep weight list for one exercise"
   (max-reps (filter-log log
+<<<<<<< HEAD
 						:exercise #'(lambda (ex) (string= name (exercise-name ex))))))
+=======
+						:exercise #'(lambda (ex) (string= name (exercise-name ex))))))
+
+(defun export-aliases (&optional (s t))
+  (let ((aliases (load-parse-aliases)))
+	(format s "(in-package :cl-training)")
+	(loop
+	  for (exercise . aliases) in aliases
+	  do (format s "~&~%(def-exercise \"~a\" 
+:aliases '(~{\"~a\" ~})
+:base 0)" exercise aliases))))
+
+(defun create-alias-sexp-file (path)
+  (with-open-file (str path
+					   :direction :output 
+                       :if-exists :supersede
+                       :if-does-not-exist :create)
+	(export-aliases str)))
+
+(defun collate-hash (items hash key-fn value-fn
+					 &key (join-fn #'(lambda (a b) (declare (ignore b)) a))
+					   (default nil))
+  (loop
+	for item in items
+	for join-val = (gethash (funcall key-fn item) hash default)
+	do (setf (gethash (funcall key-fn item) hash default)
+			 (funcall join-fn (funcall value-fn item) join-val))
+	finally (return hash)))
+
+(defun scalar-product (list-of-lists)
+  (reduce #'+
+		  (mapcar #'(lambda (list) (reduce #'* list))
+				  (transpose list-of-lists))))
+
+(defun hash-list (hash &optional (join-fn #'list))
+  (loop
+	for k being the hash-keys of hash using (hash-value v)
+	for ret = (funcall join-fn k v)
+	collect ret))
+
+(defun weekly-volume (name)
+  (hash-list 
+   (collate-hash (trainings-table (filter-log (load-parse-training)
+											  :exercise #'(lambda (ex) (string= name (exercise-name ex)))))
+				 (make-hash-table :test #'equalp)
+				 #'(lambda (x)  (format-timestring nil (first x) :format '(:year "-" :iso-week-number)))
+				 #'(lambda (x) (scalar-product (subseq x 2)))
+				 :join-fn #'+
+				 :default 0)))
+>>>>>>> 11e8897 (WIP)

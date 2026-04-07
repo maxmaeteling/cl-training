@@ -8,10 +8,14 @@
    :exercise-plot-time/tonnage
    :exercise-plot-time/max-rm
    :exercise-plot-time/tonnages
+<<<<<<< HEAD
    :date-gnuplot
    :plot-time/stacked-values
    :output-image-path
    :relative-image-path))
+=======
+   :output-image-path))
+>>>>>>> 11e8897 (WIP)
 
 (in-package :cl-training.plots)
 

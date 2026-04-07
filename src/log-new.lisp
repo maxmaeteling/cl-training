@@ -1,12 +1,28 @@
 (defpackage cl-training.log-new
   (:use :cl :cl-training.config :cl-training.classes :cl-training.parsers-new :local-time :maxpc)
   (:export
+<<<<<<< HEAD
    :read-parse-log
    :filter-log
    :trainings-1rms
    :set-max-effort
    :trainings-tonnage
    :log-sets))
+=======
+   #:load-parse-training
+   #:normalize-exercise-name
+   #:normalize-exercise-names
+   #:build-alias-hashtable
+   #:load-parse-aliases
+   #:create-alias-db
+   #:filter-log
+   #:trainings-1rms
+   #:set-max-effort
+   #:trainings-tonnage
+   #:ensure-alias-db
+   #:log-sets
+   #:trainings-table))
+>>>>>>> 11e8897 (WIP)
 
 (in-package :cl-training.log-new)
 
@@ -188,3 +204,22 @@
 								  (aref sets i 2) set)
 							(incf i))))))
 	(values training-dates exercise-names sets)))
+
+(defun exercise-data (exercise)
+  (loop
+	for set in (exercise-sets exercise)
+	collect (set-number set) into sets
+	collect (set-reps set) into reps
+	collect (set-weight set) into weights
+	finally (return (values sets reps weights))))
+
+(defun trainings-table (log)
+  (loop
+	for training in log
+	append (loop for exercise in (training-exercises training)
+				 for (sets reps weights) = (multiple-value-list (exercise-data exercise))
+				 collect (list (training-date training)
+							   (exercise-name exercise)
+							   sets
+							   reps
+							   weights))))
