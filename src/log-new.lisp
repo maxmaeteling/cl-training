@@ -1,28 +1,12 @@
 (defpackage cl-training.log-new
   (:use :cl :cl-training.config :cl-training.classes :cl-training.parsers-new :local-time :maxpc)
   (:export
-<<<<<<< HEAD
    :read-parse-log
    :filter-log
    :trainings-1rms
    :set-max-effort
    :trainings-tonnage
    :log-sets))
-=======
-   #:load-parse-training
-   #:normalize-exercise-name
-   #:normalize-exercise-names
-   #:build-alias-hashtable
-   #:load-parse-aliases
-   #:create-alias-db
-   #:filter-log
-   #:trainings-1rms
-   #:set-max-effort
-   #:trainings-tonnage
-   #:ensure-alias-db
-   #:log-sets
-   #:trainings-table))
->>>>>>> 11e8897 (WIP)
 
 (in-package :cl-training.log-new)
 

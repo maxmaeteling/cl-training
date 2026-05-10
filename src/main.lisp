@@ -6,11 +6,8 @@
    :cl-training.log-new
    :cl-training.print
    :cl-training.classes
-<<<<<<< HEAD
    :cl-training.helpers
-=======
    :cl-who
->>>>>>> 11e8897 (WIP)
    :local-time))
 
 (in-package :cl-training)
@@ -353,9 +350,6 @@
 (defun exercise-max-reps (log name)
   "Load default data and create a max rep weight list for one exercise"
   (max-reps (filter-log log
-<<<<<<< HEAD
-						:exercise #'(lambda (ex) (string= name (exercise-name ex))))))
-=======
 						:exercise #'(lambda (ex) (string= name (exercise-name ex))))))
 
 (defun export-aliases (&optional (s t))
@@ -404,4 +398,4 @@
 				 #'(lambda (x) (scalar-product (subseq x 2)))
 				 :join-fn #'+
 				 :default 0)))
->>>>>>> 11e8897 (WIP)
+
