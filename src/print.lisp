@@ -8,8 +8,8 @@
 (in-package :cl-training.print)
 
 (defparameter +CELL-FORMATS+ '(:left   "~vA"
-                              :center "~v:@<~A~>"
-                              :right  "~v@A"))
+                               :center "~v:@<~A~>"
+                               :right  "~v@A"))
 
 (defun output-date (stream date)
   (local-time:format-timestring stream
@@ -25,7 +25,9 @@
   (format stream "~d*~f" (reps set) (weight set)))
 
 (defmethod output-set-readable (stream (set multi-set-weight))
-  (format stream "~d*~d*~f" (num set) (reps set) (weight set)))
+  (if (= 1 (num set))
+	  (format stream "~d*~f" (reps set) (weight set))
+	  (format stream "~d*~d*~f" (num set) (reps set) (weight set))))
 
 (defun output-exercise-readable (stream exercise)
   (format stream
@@ -62,7 +64,7 @@
 											 collect (if (stringp cell)
                                                          cell
 										;else
-                                                         (format nil "~A" cell))))))
+                                                      (format nil "~A" cell))))))
          (col-widths (loop with widths = (make-array col-count :initial-element 0)
                            for row in strtable
                            do (loop for cell in row
