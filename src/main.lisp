@@ -12,25 +12,6 @@
 
 (in-package :cl-training)
 
-(defmacro html-frame (title body)
-  `(progn
-	 (setf (html-mode) :html5)
-	 (with-html-output (s nil :prologue t)
-	   (:html (:title ,title) (:body ,body)))))
-
-(defun html-data-table (stream titles rows alignments)
-  (with-html-output (stream)
-	(:table (:tr (mapcar #'(lambda (c) (htm (:th (str c))))
-						 titles))
-			(mapcar #'(lambda (r)
-						(htm (:tr (mapcar #'(lambda (c) (htm (:td (str c))))
-										  r))))
-					rows))))
-
-(defun generate-html-report (&optional (path (output-image-path "index.html")))
-  (with-open-file (s path :direction :output :if-exists :supersede)
-	(html-frame "Testseite" "Testinhalt")))
-
 (defun regenerate-plots ()
   (let* ((log-unfiltered (read-parse-log))
 		 (log (filter-log log-unfiltered
