@@ -7,7 +7,6 @@
    :cl-training.print
    :cl-training.classes
    :cl-training.helpers
-   :cl-who
    :local-time))
 
 (in-package :cl-training)

@@ -2,7 +2,7 @@
   :version "0.1.0"
   :author "Max Mäteling"
   :license ""
-  :depends-on ("maxpc" "parse-number" "eazy-gnuplot" "local-time" "cl-who")
+  :depends-on ("maxpc" "parse-number" "eazy-gnuplot" "local-time")
   :components ((:module "src"
                 :components
                 ((:file "config")
