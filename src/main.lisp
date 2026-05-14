@@ -374,8 +374,7 @@
    (collate-hash (trainings-table (filter-log (load-parse-training)
 											  :exercise #'(lambda (ex) (string= name (exercise-name ex)))))
 				 (make-hash-table :test #'equalp)
-				 #'(lambda (x)  (format-timestring nil (first x) :format '(:year "-" :iso-week-number)))
+				 #'(lambda (x) (format-timestring nil (first x) :format '(:year "-" :iso-week-number)))
 				 #'(lambda (x) (scalar-product (subseq x 2)))
 				 :join-fn #'+
 				 :default 0)))
-
